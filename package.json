@@ -1,0 +1,80 @@
+{
+  "name": "helfi-kymp-district-project-search",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": ".",
+  "dependencies": {
+    "@appbaseio/reactivesearch": "^3.25.1",
+    "@emotion/styled": "^11.10.0",
+    "date-fns": "^2.16.1",
+    "eslint-config-react-app": "^7.0.1",
+    "hds-design-tokens": "^2.1.1",
+    "hds-react": "^2.1.1",
+    "i18next": "^21.4.0",
+    "i18next-browser-languagedetector": "^6.1.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-i18next": "^11.7.3",
+    "react-redux": "^8.0.2",
+    "react-scripts": "^5.0.1"
+  },
+  "scripts": {
+    "start": "BROWSER=none react-scripts start",
+    "build": "react-scripts build",
+    "test": "TZ=UTC react-scripts test",
+    "eject": "react-scripts eject",
+    "prepare": "husky install",
+    "create-release": "npm run build && cd ./build/static/js && zip -r ../../../helfi-kymp-district-project-search.zip ./*.js"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/react-hooks": "^7.0.2",
+    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
+    "@types/classnames": "^2.2.11",
+    "@types/node": "^16.11.6",
+    "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-router-dom": "^5.1.5",
+    "husky": ">=4",
+    "lint-staged": ">=10",
+    "msw": "^0.44.2",
+    "prettier": "^2.7.1",
+    "react-test-renderer": "^17.0.2",
+    "typescript": "^4.4.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,css}": [
+      "eslint",
+      "prettier --write"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ],
+    "coveragePathIgnorePatterns": [
+      "node_modules",
+      "<rootDir>/src/index.tsx",
+      "<rootDir>/src/enum/*",
+      "<rootDir>/src/types/*"
+    ]
+  }
+}

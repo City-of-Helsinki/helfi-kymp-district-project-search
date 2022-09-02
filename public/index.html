@@ -25,13 +25,24 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <!-- Development stylesheets -->
+    <link rel="preload" href="https://helfi-kymp.docker.so/liikenne-assets/themes/contrib/hdbt/dist/fonts/HelsinkiGrotesk-Regular.woff"/>
+    <link rel="preload" href="https://helfi-kymp.docker.so/liikenne-assets/themes/contrib/hdbt/dist/fonts/HelsinkiGrotesk-Bold.woff"/>
+    <link rel="preload" href="https://helfi-kymp.docker.so/liikenne-assets/themes/contrib/hdbt/dist/fonts/HelsinkiGrotesk-Medium.woff"/>
     <link rel="stylesheet" href="https://helfi-kymp.docker.so/liikenne-assets/themes/contrib/hdbt/dist/css/styles.min.css" />
+    <link rel="stylesheet" href="https://helfi-kymp.docker.so/liikenne-assets/themes/custom/hdbt_subtheme/dist/css/styles.min.css" />
+    <link rel="stylesheet" href="https://helfi-kymp.docker.so/liikenne-assets/themes/contrib/hdbt/dist/css/hdbt-icons.css" />
     <title>React App</title>
     <script>
-      // Mock Drupal.t in development to prevent errors.
+      // Mock Drupal.t & drupalSettings in development to prevent errors.
       window.Drupal = {
         t: function(str, args, options) {
           return str;
+        }
+      }
+
+      window.drupalSettings = {
+        path: {
+          currentLanguage: 'fi'
         }
       }
     </script>

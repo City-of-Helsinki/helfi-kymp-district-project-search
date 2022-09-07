@@ -1,12 +1,7 @@
-import { ReactiveList, DataSearch, MultiDropdownList, MultiList, SelectedFilters } from '@appbaseio/reactivesearch';
+import { DataSearch, MultiDropdownList, MultiList, SelectedFilters } from '@appbaseio/reactivesearch';
 
-import SearchComponents from '../enum/SearchComponents';
-import Result from '../types/Result';
-import ResultCard from './ResultCard';
-import ResultsHeading from './ResultsHeading';
-
-
-const ResultsContainer = () => {
+const FormContainer = () => {
+  // TODO: make filters use reactivecomponent
   return (
     <div className="component__container">
       <div className="component__content district-project-search">
@@ -109,33 +104,9 @@ const ResultsContainer = () => {
           />
         </div>
         <SelectedFilters />
-        <div>
-          <ResultsHeading />
-        </div>
-        <ReactiveList
-          className="districts-projects-container"
-          componentId={SearchComponents.RESULTS}
-          dataField={'title'}
-          loader="Loading Results.."
-          pages={3}
-          pagination={true}
-          react={{
-            and: ["SearchBox", "DistrictSensor", "ThemeSensor", "TypeSensor", "PhaseSensor"]
-          }}
-          render={({ data }: any) => (
-            <ul className="districts-projects-listing districts-projects--teasers">
-              {data.map((item: Result) => (
-                <ResultCard key={item._id} {...item} />
-              ))}
-            </ul>
-          )}
-          showResultStats={false}
-          size={10}
-        />
-
-      </div>
     </div>
+  </div>
+
   );
 };
-
-export default ResultsContainer;
+export default FormContainer;

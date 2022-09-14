@@ -3,7 +3,6 @@ import { ReactiveList } from '@appbaseio/reactivesearch';
 import SearchComponents from '../enum/SearchComponents';
 import Result from '../types/Result';
 import ResultCard from '../components/results/ResultCard';
-import ResultsHeading from '../components/results/ResultsHeading';
 import useLanguageQuery from '../hooks/useLanguageQuery';
 
 

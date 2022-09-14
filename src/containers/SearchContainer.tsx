@@ -4,7 +4,6 @@ import ResultsContainer from './ResultsContainer';
 const SearchContainer = () => {
   return (
     <div>
-      {/* <FormContainer /> */}
       <ResultsContainer />
     </div>
   );

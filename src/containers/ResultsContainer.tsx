@@ -12,7 +12,6 @@ const ResultsContainer = () => {
 
   return (
     <div>
-      {/* <ResultsHeading /> */}
       <ReactiveList
         className="districts-projects-container"
         componentId={SearchComponents.RESULTS}

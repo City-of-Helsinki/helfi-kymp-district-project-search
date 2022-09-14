@@ -9,6 +9,7 @@ export interface Result {
   content_type: Array<string>;
   title: Array<string>;
   field_project_district_name?: Array<string>;
+  field_project_external_website?: Array<string>;
   field_project_image_url?: Array<string>;
   field_project_image_alt?: Array<string>;
   field_project_phase_name?: Array<string>;

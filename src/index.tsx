@@ -1,11 +1,8 @@
-import './i18n';
-import { ReactiveBase } from '@appbaseio/reactivesearch';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Settings from './enum/Settings';
-import SearchContainer from './search/SearchContainer';
-
+import BaseContainer from './containers/BaseContainer';
+import SearchContainer from './containers/SearchContainer';
 
 const rootSelector: string = 'helfi-kymp-district-project-search';
 const rootElement: HTMLElement | null = document.getElementById(rootSelector);
@@ -13,10 +10,11 @@ const rootElement: HTMLElement | null = document.getElementById(rootSelector);
 if (rootElement) {
   ReactDOM.render(
     <React.StrictMode>
-      <ReactiveBase app={Settings.INDEX} url={process.env.REACT_APP_ELASTIC_URL}>
+      <BaseContainer>
         <SearchContainer />
-      </ReactiveBase>
+      </BaseContainer>
     </React.StrictMode>,
-    document.getElementById('helfi-kymp-district-project-search')
+    rootElement
   );
 }
+

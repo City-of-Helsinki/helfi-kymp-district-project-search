@@ -1,23 +1,55 @@
-import { StateProvider } from '@appbaseio/reactivesearch';
+import { StateProvider, ReactiveComponent } from '@appbaseio/reactivesearch';
 
-import SearchComponents from '../../enum/SearchComponents';
+import useLanguageQuery from '../../hooks/useLanguageQuery';
 
-export const ResultsHeading = () => {
-  const { RESULTS, SUBMIT } = SearchComponents;
+function ResultsHeading(): JSX.Element {
+  const languageFilter = useLanguageQuery();
 
   return (
-    <StateProvider
-      includeKeys={['value', 'hits']}
-      render={({ searchState }) => (
-        <h3 className="districts-projects-listing__heading">
-        {searchState[SUBMIT] && searchState[SUBMIT].value && searchState[RESULTS] && searchState[RESULTS].hits
-            ? Drupal.t(
-                Drupal.t('Districts and projects based on your choices', {}, { context: 'Districts and projects search' }) +
-                  `(${searchState[RESULTS].hits ? searchState[RESULTS].hits.total : 0})`
+    <ReactiveComponent
+      componentId='resultStats'
+      defaultQuery={() => ({
+        aggs: {
+          content_type: {
+            terms: {
+              field: 'content_type'
+            },
+          },
+        },
+        query: languageFilter
+      })}
+      render={() => {
+        return (
+          <StateProvider
+            includeKeys={['value', 'hits', 'aggregations']}
+            render={({ searchState }) => {
+              const projectCount = searchState?.resultStats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key == 'project')
+              const districtCount = searchState?.resultStats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key == 'district')
+
+              return (
+                <div className="district-and-projects-search__results_heading">
+                  <div className="district-and-projects-search__count__container">
+                    <span className="district-and-projects-search__count">
+                      <span className="district-and-projects-search__count-total">{searchState?.results?.hits?.total} </span>
+                      <span className="district-and-projects-search__count-label">{Drupal.t('search results', {}, { context: 'Districts and projects search result count' })} </span>
+                    </span>
+                    <span className="district-and-projects-search__count">
+                      <span className="district-and-projects-search__count-count">({districtCount && districtCount.doc_count} </span>
+                      <span className="district-and-projects-search__count-label">{Drupal.t('districts', {}, { context: 'Districts and projects search' })} </span>
+                    </span>
+                    <span className="district-and-projects-search__count">
+                      <span className="district-and-projects-search__count-count">{Drupal.t('and', {}, { context: 'Districts and projects search' })} {projectCount && projectCount.doc_count} </span>
+                      <span className="district-and-projects-search__count-label">{Drupal.t('projects', {}, { context: 'Districts and projects search' })})</span>
+                    </span>
+                  </div>
+                  <div className="district-and-projects-search__sort__container">
+                  </div>
+                </div>
               )
-            : Drupal.t('All districts and projects', {}, { context: 'Districts and projects search heading' })}
-        </h3>
-      )}
+            }}
+          />
+        );
+      }}
     />
   );
 };

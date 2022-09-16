@@ -17,11 +17,10 @@ const ResultCard = ({
   field_project_theme_name,
   field_district_sub_districts_name
 }: Result) => {
-  const siteUrl = process.env.REACT_APP_DRUPAL_URL
   const articleClass = content_type[0] === 'project' ? 'project-teaser node--type-project' : 'district-teaser node--type-district';
   const tagBgColor = content_type[0] === 'project' ? 'content-tags__tags__tag--gold' : 'content-tags__tags__tag--coat-of-arms';
   const linkIconClass = field_project_external_website ? 'hel-icon--link-external' : 'hel-icon--arrow-right';
-  const linkUrl = field_project_external_website ? field_project_external_website[0] : `${siteUrl}${url}`;
+  const linkUrl = field_project_external_website ? field_project_external_website[0] : `${url}`;
   let imageUrl = field_project_image_url ? field_project_image_url[0] : ''
   imageUrl = field_district_image_url ? field_district_image_url[0] : imageUrl
   let imageAlt = field_project_image_alt ? field_project_image_alt[0] : ''
@@ -31,7 +30,7 @@ const ResultCard = ({
     <article about={url[0]} className={articleClass}>
       <div className={`${content_type[0]}-teaser__image`}>
         { imageUrl ? (
-          <img src={`${siteUrl}${imageUrl}`} alt={imageAlt} loading="lazy" typeof="foaf:Image" />
+          <img src={`${imageUrl}`} alt={imageAlt} loading="lazy" typeof="foaf:Image" />
         ) : (
         <div className="image-placeholder">
           <span className="hel-icon hel-icon--home-smoke"></span>

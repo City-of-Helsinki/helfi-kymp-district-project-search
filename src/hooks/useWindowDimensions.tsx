@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
+  const mobileBreakpoint = window.getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-m');
+
   return {
     width,
-    height
+    height,
+    isMobile: width < parseInt(mobileBreakpoint),
   };
 }
 

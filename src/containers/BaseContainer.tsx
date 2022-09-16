@@ -13,7 +13,7 @@ const BaseContainer = ({ children }: Props) => {
       url={process.env.REACT_APP_ELASTIC_URL}
       style={{
         color: 'inherit',
-        fontFamily: 'inherit',
+        fontFamily: 'inherit'
       }}
     >
       {children}

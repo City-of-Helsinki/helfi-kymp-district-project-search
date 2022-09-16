@@ -25,8 +25,8 @@ function ResultsHeading(): JSX.Element {
           <StateProvider
             includeKeys={['value', 'hits', 'aggregations']}
             render={({ searchState }) => {
-              const projectCount = searchState?.resultStats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key === 'project')
-              const districtCount = searchState?.resultStats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key === 'district')
+              const projectCount = searchState?.result_stats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key === 'project')
+              const districtCount = searchState?.result_stats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key === 'district')
 
               return (
                 <div className="district-and-projects-search__results_heading">

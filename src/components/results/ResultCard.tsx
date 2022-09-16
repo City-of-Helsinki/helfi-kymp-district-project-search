@@ -39,10 +39,10 @@ const ResultCard = ({
       </div>
 
       <div className={`${content_type[0]}-teaser__data`}>
-        <section className="content-tags" aria-label={Drupal.t('Tags', {}, { context: 'District and project search tags' })}>
+        <section className="content-tags" aria-label={Drupal.t('Tags', {}, {})}>
           <ul className="content-tags__tags content-tags__tags--static">
             <li className={`content-tags__tags__tag ${tagBgColor}`}>
-              <span>{Drupal.t(capitalize(content_type[0]), {}, { context: 'District and project search content type' })}</span>
+              <span>{Drupal.t(capitalize(content_type[0]), {}, {})}</span>
             </li>
           </ul>
         </section>
@@ -50,24 +50,24 @@ const ResultCard = ({
         <a href={linkUrl} className={`${content_type[0]}-teaser__link`} {...field_project_external_website && {'data-is-external' : 'true'}} rel="bookmark">
           <h3 className="content-card__title"><span>{capitalize(title[0])}</span></h3>
           {field_project_external_website && 
-            <span className="link__type link__type--external" aria-label={`(${Drupal.t('Link leads to external service', {}, { context: 'District and project search external link' })})`}></span>
+            <span className="link__type link__type--external" aria-label={`(${Drupal.t('Link leads to external service', {}, {})})`}></span>
           }
         </a>
 
         { project_plan_schedule || project_execution_schedule ? 
-          <MetadataItem icon="calendar" label={Drupal.t('Estimated schedule', {}, { context: 'District and project search Estimated schedule label' })} projectPlanSchedule={project_plan_schedule} projectExecutionSchedule={project_execution_schedule} />
+          <MetadataItem icon="calendar" label={Drupal.t('Estimated schedule', {}, {})} projectPlanSchedule={project_plan_schedule} projectExecutionSchedule={project_execution_schedule} />
         :
           null
         }
 
         {field_project_district_name && 
-          <MetadataItem icon="location" label={Drupal.t('Location', {}, { context: 'District and project search location label' })} items={field_project_district_name} />
+          <MetadataItem icon="location" label={Drupal.t('Location', {}, {})} items={field_project_district_name} />
         }
         {field_district_sub_districts_name && 
-          <MetadataItem icon="location" label={Drupal.t('Districts', {}, { context: 'District and project searchdistricts label' })} items={field_district_sub_districts_name} />
+          <MetadataItem icon="location" label={Drupal.t('Districts', {}, {})} items={field_district_sub_districts_name} />
         }
         {field_project_theme_name && 
-          <MetadataItem icon="locate" label={Drupal.t('Theme', {}, { context: 'District and project search theme label' })} items={field_project_theme_name} />
+          <MetadataItem icon="locate" label={Drupal.t('Theme', {}, {})} items={field_project_theme_name} />
         }
         
         <span className={`hel-icon ${linkIconClass}`} aria-hidden="true"></span>

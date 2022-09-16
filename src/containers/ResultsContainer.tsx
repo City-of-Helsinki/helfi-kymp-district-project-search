@@ -33,9 +33,9 @@ const ResultsContainer = () => {
             ...languageFilter,
           },
         })}
-        // react={{
-        //   and: ["SearchBox", "DistrictSensor", "ThemeSensor", "TypeSensor", "PhaseSensor"]
-        // }}
+        react={{
+          and: ["SearchBox", "DistrictSensor", "ThemeSensor", "TypeSensor", "PhaseSensor"]
+        }}
         render={({ data }: any) => (
           <ul className="districts-projects-search__listing">
             {data.map((item: Result) => (
@@ -45,7 +45,7 @@ const ResultsContainer = () => {
         )}
         renderNoResults={() => (
           <div className="districts-projects-search__listing__no-results">
-            {Drupal.t('No results found', {}, { context: 'District and project search no results' })}
+            {Drupal.t('No results found.', {}, {})}
           </div>
         )}
         renderPagination={(props) => <Pagination {...props} />}

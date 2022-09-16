@@ -33,15 +33,15 @@ function ResultsHeading(): JSX.Element {
                   <div className="district-and-projects-search__count__container">
                     <span className="district-and-projects-search__count">
                       <span className="district-and-projects-search__count-total">{searchState?.results?.hits?.total} </span>
-                      <span className="district-and-projects-search__count-label">{Drupal.t('search results', {}, { context: 'Districts and projects search result count' })} </span>
+                      <span className="district-and-projects-search__count-label">{Drupal.t('search results', {}, { context: 'Districts and projects search result heading' })} </span>
                     </span>
                     <span className="district-and-projects-search__count">
                       <span className="district-and-projects-search__count-count">({districtCount && districtCount.doc_count} </span>
                       <span className="district-and-projects-search__count-label">{Drupal.t('districts', {}, { context: 'Districts and projects search' })} </span>
                     </span>
                     <span className="district-and-projects-search__count">
-                      <span className="district-and-projects-search__count-count">{Drupal.t('and', {}, { context: 'Districts and projects search' })} {projectCount && projectCount.doc_count} </span>
-                      <span className="district-and-projects-search__count-label">{Drupal.t('projects', {}, { context: 'Districts and projects search' })})</span>
+                      <span className="district-and-projects-search__count-count">{Drupal.t('and', {}, {})} {projectCount && projectCount.doc_count} </span>
+                      <span className="district-and-projects-search__count-label">{Drupal.t('projects', {}, { context: 'Project list, amount of projects' })})</span>
                     </span>
                   </div>
                   <div className="district-and-projects-search__sort__container">

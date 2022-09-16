@@ -1,13 +1,15 @@
 import { StateProvider, ReactiveComponent } from '@appbaseio/reactivesearch';
 
 import useLanguageQuery from '../../hooks/useLanguageQuery';
+import SearchComponents from '../../enum/SearchComponents';
 
 function ResultsHeading(): JSX.Element {
+  const { RESULT_STATS } = SearchComponents;
   const languageFilter = useLanguageQuery();
 
   return (
     <ReactiveComponent
-      componentId='resultStats'
+      componentId={RESULT_STATS}
       defaultQuery={() => ({
         aggs: {
           content_type: {
@@ -23,8 +25,8 @@ function ResultsHeading(): JSX.Element {
           <StateProvider
             includeKeys={['value', 'hits', 'aggregations']}
             render={({ searchState }) => {
-              const projectCount = searchState?.resultStats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key == 'project')
-              const districtCount = searchState?.resultStats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key == 'district')
+              const projectCount = searchState?.resultStats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key === 'project')
+              const districtCount = searchState?.resultStats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key === 'district')
 
               return (
                 <div className="district-and-projects-search__results_heading">

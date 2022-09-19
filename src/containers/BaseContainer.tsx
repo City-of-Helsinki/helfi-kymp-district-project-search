@@ -11,9 +11,13 @@ const BaseContainer = ({ children }: Props) => {
     <ReactiveBase
       app={Settings.INDEX}
       url={process.env.REACT_APP_ELASTIC_URL}
-      style={{
-        color: 'inherit',
-        fontFamily: 'inherit',
+      theme={{
+        colors: {
+          primaryColor: 'inherit'
+        },
+        typography: {
+          fontFamily: 'inherit'
+        }
       }}
     >
       {children}

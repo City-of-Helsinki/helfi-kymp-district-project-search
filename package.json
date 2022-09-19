@@ -12,9 +12,7 @@
     "hds-react": "^2.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-i18next": "^11.7.3",
-    "react-redux": "^8.0.2",
-    "react-scripts": "^5.0.1"
+    "react-redux": "^8.0.2"
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",
@@ -46,10 +44,17 @@
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
     "@types/react-router-dom": "^5.1.5",
+    "buffer": "^6.0.3",
     "husky": ">=4",
+    "intersection-observer": "^0.12.2",
     "lint-staged": ">=10",
     "msw": "^0.44.2",
+    "path": "^0.12.7",
+    "path-browserify": "^1.0.1",
     "prettier": "^2.7.1",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "react-scripts": "^5.0.1",
     "react-test-renderer": "^17.0.2",
     "typescript": "^4.4.4"
   },

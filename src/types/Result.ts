@@ -1,4 +1,4 @@
-export interface Result {
+interface Result {
   _index: string;
   _type: string;
   _id: string;

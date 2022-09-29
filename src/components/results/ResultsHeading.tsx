@@ -2,6 +2,7 @@ import { StateProvider, ReactiveComponent } from '@appbaseio/reactivesearch';
 
 import useLanguageQuery from '../../hooks/useLanguageQuery';
 import SearchComponents from '../../enum/SearchComponents';
+import IndexFields from '../../enum/IndexFields';
 
 function ResultsHeading(): JSX.Element {
   const { RESULT_STATS } = SearchComponents;
@@ -12,7 +13,7 @@ function ResultsHeading(): JSX.Element {
       componentId={RESULT_STATS}
       defaultQuery={() => ({
         aggs: {
-          content_type: {
+          [IndexFields.CONTENT_TYPE]: {
             terms: {
               field: 'content_type'
             },
@@ -33,11 +34,11 @@ function ResultsHeading(): JSX.Element {
                   <div className="district-and-projects-search__count__container">
                     <span className="district-and-projects-search__count">
                       <span className="district-and-projects-search__count-total">{searchState?.results?.hits?.total} </span>
-                      <span className="district-and-projects-search__count-label">{Drupal.t('search results', {}, { context: 'Districts and projects search result heading' })} </span>
+                      <span className="district-and-projects-search__count-label">{Drupal.t('search results', {}, { context: 'District and project search result heading' })} </span>
                     </span>
                     <span className="district-and-projects-search__count">
                       <span className="district-and-projects-search__count-count">({districtCount && districtCount.doc_count} </span>
-                      <span className="district-and-projects-search__count-label">{Drupal.t('districts', {}, { context: 'Districts and projects search' })} </span>
+                      <span className="district-and-projects-search__count-label">{Drupal.t('districts', {}, { context: 'District and project search' })} </span>
                     </span>
                     <span className="district-and-projects-search__count">
                       <span className="district-and-projects-search__count-count">{Drupal.t('and', {}, {})} {projectCount && projectCount.doc_count} </span>

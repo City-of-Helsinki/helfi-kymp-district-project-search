@@ -1,14 +1,26 @@
 import Aggregations from '../types/Aggregations';
 import OptionType from '../types/OptionType';
+import { capitalize } from '../helpers/helpers';
 
-export default function useAggregations(aggregations: Aggregations, key: string) {
+export default function useAggregations(aggregations: Aggregations, indexKey: string, taxonomyKey: string) {
   let options: OptionType[] = [];
+  
+  if (aggregations && aggregations[indexKey] && aggregations[indexKey].buckets && aggregations[indexKey].buckets.length) {
+    const options = aggregations && aggregations[taxonomyKey].buckets.map((bucket) => {
+      let label = `${capitalize(bucket.key)}`;
+      const match = aggregations && aggregations[indexKey].buckets.find((item: any) => item.key === bucket.key);
+  
+      if (match !== undefined) {
+        label = `${capitalize(bucket.key)} (${match.doc_count})`;
+      }
+  
+      return {
+        label,
+        value: bucket.key
+      }
+    });
 
-  if (aggregations && aggregations[key] && aggregations[key].buckets && aggregations[key].buckets.length) {
-    options = aggregations[key].buckets.map((element) => ({
-      label: element.key,
-      value: element.key,
-    }));
+    return options;
   }
 
   return options;

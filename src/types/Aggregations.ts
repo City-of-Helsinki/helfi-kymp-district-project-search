@@ -1,9 +1,9 @@
-export type AggregationItem = {
+type AggregationItem = {
   key: string;
   doc_count: number;
 };
 
-export type Aggregation = {
+type Aggregation = {
   buckets: AggregationItem[];
 };
 

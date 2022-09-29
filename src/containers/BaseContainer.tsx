@@ -12,9 +12,9 @@ const BaseContainer = ({ children }: Props) => {
       app={Settings.INDEX}
       url={process.env.REACT_APP_ELASTIC_URL}
       theme={{
-        colors: {
-          primaryColor: 'inherit'
-        },
+        // colors: {
+        //   primaryColor: 'inherit',
+        // },
         typography: {
           fontFamily: 'inherit'
         }

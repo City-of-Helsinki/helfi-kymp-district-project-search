@@ -5,12 +5,12 @@ import Result from '../types/Result';
 import Pagination from '../components/results/Pagination';
 import ResultCard from '../components/results/ResultCard';
 import ResultsHeading from '../components/results/ResultsHeading';
-import useLanguageQuery from '../hooks/useLanguageQuery';
+import useResultListQuery from '../hooks/useResultListQuery';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 
 const ResultsContainer = () => {
-  const languageFilter = useLanguageQuery();
+  const resultListFilter = useResultListQuery();
   const dimensions = useWindowDimensions();
   const pages = dimensions.isMobile ? 3 : 5;
 
@@ -30,19 +30,22 @@ const ResultsContainer = () => {
         URLParams={true}
         defaultQuery={() => ({
           query: {
-            ...languageFilter,
+            ...resultListFilter,
           },
         })}
         react={{
-          and: ["SearchBox", "DistrictSensor", "ThemeSensor", "TypeSensor", "PhaseSensor"]
+          and: [SearchComponents.SUBMIT]
         }}
-        render={({ data }: any) => (
-          <ul className="districts-projects-search__listing">
+        render={({ data }: any) => {
+          return (
+            <ul className="districts-projects-search__listing">
             {data.map((item: Result) => (
               <ResultCard key={item._id} {...item} />
             ))}
           </ul>
-        )}
+          )
+
+        }}
         renderNoResults={() => (
           <div className="districts-projects-search__listing__no-results">
             {Drupal.t('No results found.', {}, {})}

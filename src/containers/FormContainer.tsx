@@ -12,6 +12,7 @@ import type OptionType from '../types/OptionType';
 
 type FormContainerProps = {
   initialState: {
+    isParamsSet: boolean;
     title: string;
     districts: OptionType[];
     themes: OptionType[];
@@ -26,6 +27,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
   const [themes, setThemes] = useState(initialState.themes);
   const [phases, setPhases] = useState(initialState.phases);
   const [types, setTypes] = useState(initialState.types);
+  const [isAccordionInitiallyOpen, setIsAccordionOpen] = useState(initialState.isParamsSet);
   const languageFilter = useLanguageQuery();
   const submitButton = useRef<any>(null);
 
@@ -91,7 +93,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                 placeholder={Drupal.t('Etsi hakusanalla, esim. Pasila', {}, { context: 'District and project search form label' })}
                 defaultValue={title}
                 onChange={({ target: { value } }) => {
-                  setTitle(value)
+                  setTitle(value);
                   setQuery({value});
                 }}
               />
@@ -139,6 +141,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
       <Accordion
         className='district-project-search-form__additional-filters'
         size='s'
+        initiallyOpen={isAccordionInitiallyOpen}
         headingLevel={4}
         heading={Drupal.t('Tarkenna hankkeiden hakua', {}, { context: 'District and project search' })}
         language={window.drupalSettings.path.currentLanguage || 'fi'}

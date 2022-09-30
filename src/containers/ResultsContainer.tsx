@@ -9,7 +9,7 @@ import useResultListQuery from '../hooks/useResultListQuery';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 
-const ResultsContainer = () => {
+const ResultsContainer = (): JSX.Element => {
   const resultListFilter = useResultListQuery();
   const dimensions = useWindowDimensions();
   const pages = dimensions.isMobile ? 3 : 5;
@@ -48,7 +48,8 @@ const ResultsContainer = () => {
         }}
         renderNoResults={() => (
           <div className="districts-projects-search__listing__no-results">
-            {Drupal.t('No results found.', {}, {})}
+            <h2>{Drupal.t('Voi harmi! Emme löytäneet hakuehdoilla yhtään tulosta.', {}, {})}</h2>
+            <p>{Drupal.t('Sivuillamme esitetään toistaiseksi vain osa Helsingin hankkeista ja asuinalueista. Voit kokeilla uudestaan poistamalla jonkin rajausehdoista tai aloittamalla alusta.', {}, {})}</p>
           </div>
         )}
         renderPagination={(props) => <Pagination {...props} />}

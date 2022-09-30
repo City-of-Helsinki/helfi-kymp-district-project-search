@@ -46,7 +46,8 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
             { wildcard: { [IndexFields.TITLE]: { value: `*${state.value.toLowerCase()}*` }}},
             { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_NAME]: { value: `*${state.value.toLowerCase()}*` }}},
             { wildcard: { [IndexFields.FIELD_DISTRICT_SUB_DISTRICTS_NAME]: { value: `*${state.value.toLowerCase()}*` }}},
-            { wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*` }}}
+            { wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*` }}},
+            { wildcard: { [IndexFields.FIELD_PROJECT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*` }}},
           ];
         }
         else if (key === SearchComponents.DISTRICTS) {
@@ -70,9 +71,7 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
     });
 
     query.bool.minimum_should_match = Number(query.bool.should.length > 0);
-    
-    console.log('QUERY', query)
-    
+        
     return {
       query: query
     };

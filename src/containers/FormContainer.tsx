@@ -79,7 +79,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
 
   return (
     <div className="district-project-search-form__filters-container">
-      <div className='district-project-search-form__filters'>
+      <div className="district-project-search-form__filters">
         <ReactiveComponent
           componentId={SearchComponents.TITLE}
           defaultQuery={() => ({

@@ -51,11 +51,13 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
           ];
         }
         else if (key === SearchComponents.DISTRICTS) {
-          const terms = [
-            { term: { [IndexFields.TITLE]: state.value[0] }},
-            { term: { [IndexFields.FIELD_PROJECT_DISTRICT_NAME]: state.value[0] }},
-            { term: { [IndexFields.FIELD_DISTRICT_SUB_DISTRICTS_NAME]: state.value[0] }}
-          ];
+          const terms: Array<object> = [];
+          state.value.forEach((value: string) => {      
+            terms.push({ term: { [IndexFields.TITLE]: value }});
+            terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_NAME]: value }});
+            terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUB_DISTRICTS_NAME]: value }});
+          });
+
           query.bool.should.push(...terms);
         }
         else {
@@ -71,9 +73,10 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
     });
 
     query.bool.minimum_should_match = Number(query.bool.should.length > 0);
-        
+
     return {
-      query: query
+      query: query,
+      value: query.bool.should.length
     };
   }, [languageFilter, searchState]);
 

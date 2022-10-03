@@ -6,8 +6,9 @@ import IndexFields from '../../enum/IndexFields';
 import { getUrlParams } from '../../helpers/helpers';
 
 function ResultsHeading(): JSX.Element {
-  const { RESULT_STATS } = SearchComponents;
+  const { RESULT_STATS, SUBMIT } = SearchComponents;
   const languageFilter = useLanguageQuery();
+  let isParamsSet = false;
 
   return (
     <ReactiveComponent
@@ -31,9 +32,12 @@ function ResultsHeading(): JSX.Element {
               const districtCount = searchState?.result_stats?.aggregations?.content_type?.buckets.find((bucket: any) => bucket.key === 'district');
               const projects = searchState?.results?.hits?.hits.filter((hit: any) => hit._index === 'elasticsearch_index_drupal_projects');
               const districts = searchState?.results?.hits?.hits.filter((hit: any) => hit._index === 'elasticsearch_index_drupal_districts');
-              const params = getUrlParams();
-              const isParamsSet = params.toString() ? true : false;
-              
+
+              if (searchState[SUBMIT] && searchState[SUBMIT].value) {
+                const params = getUrlParams();
+                isParamsSet = params.toString() ? true : false;
+              }
+
               return (
                 <div className="district-and-projects-search__results_heading">
                   <div className="district-and-projects-search__count__container">

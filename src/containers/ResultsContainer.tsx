@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { ReactiveList } from '@appbaseio/reactivesearch';
 
 import SearchComponents from '../enum/SearchComponents';
@@ -12,16 +13,27 @@ import useWindowDimensions from '../hooks/useWindowDimensions';
 const ResultsContainer = (): JSX.Element => {
   const resultListFilter = useResultListQuery();
   const dimensions = useWindowDimensions();
+  const resultsWrapper = useRef<HTMLDivElement | null>(null);
   const pages = dimensions.isMobile ? 3 : 5;
 
+  const onPageChange = () => {
+    if (!resultsWrapper.current) {
+      return;
+    }
+
+    if (Math.abs(resultsWrapper.current.getBoundingClientRect().y) < window.pageYOffset) {
+      resultsWrapper.current.scrollIntoView();
+    }
+  };
+
   return (
-    <div>
+    <div ref={resultsWrapper} className='jee-wrapper main-content'>
       <ResultsHeading />
       <ReactiveList
         className="districts-projects-search__container"
         componentId={SearchComponents.RESULTS}
         dataField={'id'}
-        loader="Loading Results.."
+        onPageChange={onPageChange}
         pages={pages}
         pagination={true}
         showResultStats={false}
@@ -44,7 +56,6 @@ const ResultsContainer = (): JSX.Element => {
             ))}
           </ul>
           )
-
         }}
         renderNoResults={() => (
           <div className="districts-projects-search__listing__no-results">

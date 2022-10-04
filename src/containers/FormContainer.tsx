@@ -3,7 +3,6 @@ import { ReactiveComponent, SelectedFilters, StateProvider } from '@appbaseio/re
 import { TextInput, Accordion, IconLocation } from 'hds-react';
 
 import Dropdown from '../components/form/Dropdown';
-import SelectionsContainer from './SelectionsContainer';
 import SearchComponents from '../enum/SearchComponents';
 import SubmitButton from '../components/form/SubmitButton';
 import IndexFields from '../enum/IndexFields';
@@ -277,16 +276,6 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
         }}
         URLParams={false}
       />
-      {/* <SelectionsContainer
-        clearSelection={clearSelection}
-        clearSelections={clearSelections}
-        filters={{
-          districts: districts,
-          themes: themes,
-          phases: phases,
-          types: types
-        }}
-      /> */}
     </div>
   );
 };

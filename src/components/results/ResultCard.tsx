@@ -6,9 +6,9 @@ const ResultCard = ({
   content_type,
   title,
   url,
-  field_project_image_url,
+  field_project_image,
   field_project_image_alt,
-  field_district_image_url,
+  field_district_image,
   field_district_image_alt,
   project_execution_schedule,
   project_plan_schedule,
@@ -21,8 +21,8 @@ const ResultCard = ({
   const tagBgColor = content_type[0] === 'project' ? 'content-tags__tags__tag--gold' : 'content-tags__tags__tag--coat-of-arms';
   const linkIconClass = field_project_external_website ? 'hel-icon--link-external' : 'hel-icon--arrow-right';
   const linkUrl = field_project_external_website ? field_project_external_website[0] : `${url}`;
-  let imageUrl = field_project_image_url ? field_project_image_url[0] : ''
-  imageUrl = field_district_image_url ? field_district_image_url[0] : imageUrl
+  let imageUrl = field_project_image ? field_project_image[0] : ''
+  imageUrl = field_district_image ? field_district_image[0] : imageUrl
   let imageAlt = field_project_image_alt ? field_project_image_alt[0] : ''
   imageAlt = field_district_image_alt ? field_district_image_alt[0] : imageAlt
 

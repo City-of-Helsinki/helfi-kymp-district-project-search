@@ -39,7 +39,7 @@ export const Dropdown = ({
   selectedItemRemoveButtonAriaLabel = Drupal.t('Remove item', {}, { context: 'District and project search remove item aria label' }),
   toggleButtonAriaLabel = Drupal.t('Open the combobox', {}, { context: 'District and project search open dropdown aria label' }),
 }: DropdownProps): JSX.Element => {
-  const options: (OptionType[] | (OptionType & OptionType[])) = useAggregations(aggregations, indexKey, taxonomyKey);
+  const options: OptionType[] = useAggregations(aggregations, indexKey, taxonomyKey);
 
   useEffect(() => {
     if (!value || !value.length) {
@@ -47,7 +47,7 @@ export const Dropdown = ({
     } else {
       setQuery({ value: value.map((option: OptionType) => option.value) });
     }
-  }, [value]);
+  }, [value, setQuery]);
 
   return (
     <div className="district-project-search-form__filter">

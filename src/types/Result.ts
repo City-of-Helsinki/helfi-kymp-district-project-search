@@ -10,15 +10,15 @@ interface Result {
   title: Array<string>;
   field_project_district_name?: Array<string>;
   field_project_external_website?: Array<string>;
-  field_project_image?: Array<string>;
   field_project_image_alt?: Array<string>;
   field_project_phase_name?: Array<string>;
   field_project_search_metatags?: Array<string>;
   field_project_theme_name?: Array<string>;
   field_project_type_name?: Array<string>;
+  project_image_absolute_url?: Array<string>;
   project_execution_schedule?: Array<number>;
   project_plan_schedule?: Array<number>;
-  field_district_image?: Array<string>;
+  district_image_absolute_url?: Array<string>;
   field_district_image_alt?: Array<string>;
   field_district_search_metatags?: Array<string>;
   field_district_sub_districts_name?: Array<string>;

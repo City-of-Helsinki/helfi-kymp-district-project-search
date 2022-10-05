@@ -76,7 +76,6 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
 
     return {
       query: query,
-      value: query.bool.should.length
     };
   }, [languageFilter, searchState]);
 

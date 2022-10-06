@@ -27,10 +27,10 @@ const ResultsContainer = (): JSX.Element => {
   };
 
   return (
-    <div ref={resultsWrapper} className='jee-wrapper main-content'>
+    <div ref={resultsWrapper} className="main-content">
       <ResultsHeading />
       <ReactiveList
-        className="districts-projects-search__container"
+        className="district-project-search__container"
         componentId={SearchComponents.RESULTS}
         dataField={'id'}
         onPageChange={onPageChange}
@@ -39,7 +39,7 @@ const ResultsContainer = (): JSX.Element => {
         showResultStats={false}
         size={10}
         // sortBy={sort}
-        URLParams={true}
+        URLParams={false}
         defaultQuery={() => ({
           query: {
             ...resultListFilter,
@@ -50,7 +50,7 @@ const ResultsContainer = (): JSX.Element => {
         }}
         render={({ data }: any) => {
           return (
-            <ul className="districts-projects-search__listing">
+            <ul className="district-project-search__listing">
             {data.map((item: Result) => (
               <ResultCard key={item._id} {...item} />
             ))}
@@ -58,7 +58,7 @@ const ResultsContainer = (): JSX.Element => {
           )
         }}
         renderNoResults={() => (
-          <div className="districts-projects-search__listing__no-results">
+          <div className="district-project-search__listing__no-results">
             <h2>{Drupal.t('Voi harmi! Emme löytäneet hakuehdoilla yhtään tulosta.', {}, {})}</h2>
             <p>{Drupal.t('Sivuillamme esitetään toistaiseksi vain osa Helsingin hankkeista ja asuinalueista. Voit kokeilla uudestaan poistamalla jonkin rajausehdoista tai aloittamalla alusta.', {}, {})}</p>
           </div>

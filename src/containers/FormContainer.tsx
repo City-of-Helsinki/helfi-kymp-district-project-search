@@ -3,6 +3,7 @@ import { ReactiveComponent, StateProvider } from '@appbaseio/reactivesearch';
 import { TextInput, Accordion, IconLocation } from 'hds-react';
 
 import Dropdown from '../components/form/Dropdown';
+import SelectionsContainer from './SelectionsContainer';
 import SearchComponents from '../enum/SearchComponents';
 import SubmitButton from '../components/form/SubmitButton';
 import IndexFields from '../enum/IndexFields';
@@ -29,6 +30,53 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
   const [isAccordionInitiallyOpen] = useState(initialState.isParamsSet);
   const languageFilter = useLanguageQuery();
   const submitButton = useRef<any>(null);
+
+  const clearSelections = () => {
+    setTitle('');
+    setDistricts([]);
+    setThemes([]);
+    setPhases([]);
+    setTypes([]);
+
+    if (submitButton && submitButton.current) {
+      submitButton.current.setQuery({ query: null });
+    }
+  };
+
+  const clearSelection = (selection: OptionType, selectionType: string) => {
+    let state;
+    let stateHandler;
+
+    switch (selectionType) {
+      case 'districts':
+        state = [...districts];
+        stateHandler = setDistricts;
+        break;
+      case 'themes':
+        state = [...themes];
+        stateHandler = setThemes;
+        break;
+      case 'phases':
+        state = [...phases];
+        stateHandler = setPhases;
+        break;
+      case 'types':
+        state = [...types];
+        stateHandler = setTypes;
+        break;
+      default:
+        break;
+    }
+
+    const index = state?.findIndex((option) => {
+      return option.value === selection.value;
+    });
+
+    if (index !== undefined && state && stateHandler) {
+      state.splice(index, 1);
+      stateHandler(state);
+    }
+  };
 
   return (
     <div className="district-project-search-form__filters-container">
@@ -229,6 +277,16 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
           );
         }}
         URLParams={false}
+      />
+      <SelectionsContainer
+        clearSelection={clearSelection}
+        clearSelections={clearSelections}
+        filters={{
+          districts: districts,
+          themes: themes,
+          phases: phases,
+          types: types
+        }}
       />
     </div>
   );

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { ReactiveList } from '@appbaseio/reactivesearch';
 
 import SearchComponents from '../enum/SearchComponents';
@@ -5,23 +6,34 @@ import Result from '../types/Result';
 import Pagination from '../components/results/Pagination';
 import ResultCard from '../components/results/ResultCard';
 import ResultsHeading from '../components/results/ResultsHeading';
-import useLanguageQuery from '../hooks/useLanguageQuery';
+import useResultListQuery from '../hooks/useResultListQuery';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 
 
-const ResultsContainer = () => {
-  const languageFilter = useLanguageQuery();
+const ResultsContainer = (): JSX.Element => {
+  const resultListFilter = useResultListQuery();
   const dimensions = useWindowDimensions();
+  const resultsWrapper = useRef<HTMLDivElement | null>(null);
   const pages = dimensions.isMobile ? 3 : 5;
 
+  const onPageChange = () => {
+    if (!resultsWrapper.current) {
+      return;
+    }
+
+    if (Math.abs(resultsWrapper.current.getBoundingClientRect().y) < window.pageYOffset) {
+      resultsWrapper.current.scrollIntoView();
+    }
+  };
+
   return (
-    <div>
+    <div ref={resultsWrapper} className='jee-wrapper main-content'>
       <ResultsHeading />
       <ReactiveList
         className="districts-projects-search__container"
         componentId={SearchComponents.RESULTS}
         dataField={'id'}
-        loader="Loading Results.."
+        onPageChange={onPageChange}
         pages={pages}
         pagination={true}
         showResultStats={false}
@@ -30,22 +42,25 @@ const ResultsContainer = () => {
         URLParams={true}
         defaultQuery={() => ({
           query: {
-            ...languageFilter,
+            ...resultListFilter,
           },
         })}
         react={{
-          and: ["SearchBox", "DistrictSensor", "ThemeSensor", "TypeSensor", "PhaseSensor"]
+          and: [SearchComponents.SUBMIT]
         }}
-        render={({ data }: any) => (
-          <ul className="districts-projects-search__listing">
+        render={({ data }: any) => {
+          return (
+            <ul className="districts-projects-search__listing">
             {data.map((item: Result) => (
               <ResultCard key={item._id} {...item} />
             ))}
           </ul>
-        )}
+          )
+        }}
         renderNoResults={() => (
           <div className="districts-projects-search__listing__no-results">
-            {Drupal.t('No results found.', {}, {})}
+            <h2>{Drupal.t('Voi harmi! Emme löytäneet hakuehdoilla yhtään tulosta.', {}, {})}</h2>
+            <p>{Drupal.t('Sivuillamme esitetään toistaiseksi vain osa Helsingin hankkeista ja asuinalueista. Voit kokeilla uudestaan poistamalla jonkin rajausehdoista tai aloittamalla alusta.', {}, {})}</p>
           </div>
         )}
         renderPagination={(props) => <Pagination {...props} />}

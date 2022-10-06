@@ -1,5 +1,5 @@
 export const Settings = {
-  INDEX: 'elasticsearch_index_drupal_projects,elasticsearch_index_drupal_districts',
+  INDEX: 'elasticsearch_index_drupal_projects,elasticsearch_index_drupal_districts,elasticsearch_index_drupal_districts_taxonomy,elasticsearch_index_drupal_project_themes,elasticsearch_index_drupal_project_phases,elasticsearch_index_drupal_project_types',
 };
 
 export default Settings;

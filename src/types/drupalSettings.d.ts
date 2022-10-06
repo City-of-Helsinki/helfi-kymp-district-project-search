@@ -1,5 +1,6 @@
+type Language = 'en' | 'fi' | 'sv';
 declare namespace drupalSettings {
   const path: {
-    currentLanguage: string;
+    currentLanguage: Language;
   };
 }

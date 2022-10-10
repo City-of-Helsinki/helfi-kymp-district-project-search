@@ -27,7 +27,7 @@ const ResultsContainer = (): JSX.Element => {
   };
 
   return (
-    <div ref={resultsWrapper} className='jee-wrapper main-content'>
+    <div ref={resultsWrapper}>
       <ResultsHeading />
       <ReactiveList
         className="districts-projects-search__container"

@@ -20,7 +20,7 @@
     "test": "TZ=UTC react-scripts test",
     "eject": "react-scripts eject",
     "prepare": "husky install",
-    "create-release": "npm run build && cd ./build/static/js && zip -r ../../../helfi-kymp-district-project-search.zip ./*.js"
+    "create-release": "REACT_APP_ELASTIC_URL= rm helfi-kymp-district-project-search.zip && npm run build && cd ./build/static/js && zip -r ../../../helfi-kymp-district-project-search.zip ./*.js"
   },
   "browserslist": {
     "production": [

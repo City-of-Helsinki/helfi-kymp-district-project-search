@@ -75,13 +75,11 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
             query: languageFilter
           })}
           render={({ aggregations, setQuery }) => {
-            console.log(aggregations)
             return (
               <Dropdown
                 aggregations={aggregations}
                 indexKey={IndexFields.FIELD_PROJECT_DISTRICT_TITLE}
-                // TODO: change taxonomyKey name to something else
-                taxonomyKey="districts_for_filters"
+                filterKey="districts_for_filters"
                 icon={<IconLocation />}
                 label={Drupal.t('Select the residential area from the list', {}, { context: 'District and project search form label' })}
                 placeholder={Drupal.t('Select area', {}, { context: 'District and project search form label' })}
@@ -132,7 +130,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                 <Dropdown
                   aggregations={aggregations}
                   indexKey={IndexFields.FIELD_PROJECT_THEME_NAME}
-                  taxonomyKey="project_theme_taxonomy_terms"
+                  filterKey="project_theme_taxonomy_terms"
                   label={Drupal.t('Project theme', {}, { context: 'District and project search form label' })}
                   placeholder={Drupal.t('All themes', {}, { context: 'District and project search form label' })}
                   setQuery={setQuery}
@@ -168,7 +166,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                 <Dropdown
                   aggregations={aggregations}
                   indexKey={IndexFields.FIELD_PROJECT_PHASE_NAME}
-                  taxonomyKey="project_phase_taxonomy_terms"
+                  filterKey="project_phase_taxonomy_terms"
                   label={Drupal.t('Project stage', {}, { context: 'District and project search form label' })}
                   placeholder={Drupal.t('All stages', {}, { context: 'District and project search form label' })}
                   setQuery={setQuery}
@@ -204,7 +202,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                 <Dropdown
                   aggregations={aggregations}
                   indexKey={IndexFields.FIELD_PROJECT_TYPE_NAME}
-                  taxonomyKey="project_type_taxonomy_terms"
+                  filterKey="project_type_taxonomy_terms"
                   label={Drupal.t('Project type', {}, { context: 'District and project search form label' })}
                   placeholder={Drupal.t('All types', {}, { context: 'District and project search form label' })}
                   setQuery={setQuery}

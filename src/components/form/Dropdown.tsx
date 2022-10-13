@@ -15,7 +15,7 @@ type DropdownProps = Omit<
   label: string;
   icon?: JSX.Element;
   indexKey: string;
-  taxonomyKey: string;
+  filterKey: string;
   placeholder: string;
   setQuery: Function;
   setValue: Function;
@@ -30,7 +30,7 @@ export const Dropdown = ({
   label,
   icon,
   indexKey,
-  taxonomyKey,
+  filterKey,
   placeholder,
   setQuery,
   setValue,
@@ -39,7 +39,7 @@ export const Dropdown = ({
   selectedItemRemoveButtonAriaLabel = Drupal.t('Remove item', {}, { context: 'District and project search remove item aria label' }),
   toggleButtonAriaLabel = Drupal.t('Open the combobox', {}, { context: 'District and project search open dropdown aria label' }),
 }: DropdownProps): JSX.Element => {
-  const options: OptionType[] = useAggregations(aggregations, indexKey, taxonomyKey);
+  const options: OptionType[] = useAggregations(aggregations, indexKey, filterKey);
 
   useEffect(() => {
     if (!value || !value.length) {

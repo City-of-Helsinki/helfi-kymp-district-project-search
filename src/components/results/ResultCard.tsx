@@ -12,10 +12,10 @@ const ResultCard = ({
   field_district_image_alt,
   project_execution_schedule,
   project_plan_schedule,
-  field_project_district_name,
+  field_project_district_title,
   field_project_external_website,
   field_project_theme_name,
-  field_district_sub_districts_name
+  field_district_subdistricts_title
 }: Result) => {
   const articleClass = content_type[0] === 'project' ? 'project-teaser node--type-project' : 'district-teaser node--type-district';
   const tagBgColor = content_type[0] === 'project' ? 'content-tags__tags__tag--gold' : 'content-tags__tags__tag--coat-of-arms';
@@ -60,11 +60,11 @@ const ResultCard = ({
           null
         }
 
-        {field_project_district_name && 
-          <MetadataItem icon="location" label={Drupal.t('Location', {}, {})} items={field_project_district_name} />
+        {field_project_district_title && 
+          <MetadataItem icon="location" label={Drupal.t('Location', {}, {})} items={field_project_district_title} />
         }
-        {field_district_sub_districts_name && 
-          <MetadataItem icon="location" label={Drupal.t('Districts', {}, {})} items={field_district_sub_districts_name} />
+        {field_district_subdistricts_title && 
+          <MetadataItem icon="location" label={Drupal.t('Districts', {}, {})} items={field_district_subdistricts_title} />
         }
         {field_project_theme_name && 
           <MetadataItem icon="locate" label={Drupal.t('Theme', {}, {})} items={field_project_theme_name} />

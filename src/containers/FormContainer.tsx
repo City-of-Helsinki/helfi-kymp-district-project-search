@@ -42,8 +42,8 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
             return (
               <TextInput
                 id="district-or-project-name"
-                label={Drupal.t('Asuinalueen tai hankkeen nimi', {}, { context: 'District and project search form label' })}
-                placeholder={Drupal.t('Etsi hakusanalla, esim. Pasila', {}, { context: 'District and project search form label' })}
+                label={Drupal.t('Name of residential area or project', {}, { context: 'District and project search form label' })}
+                placeholder={Drupal.t('Use a search word such as "Pasila"', {}, { context: 'District and project search form label' })}
                 defaultValue={title}
                 onChange={({ target: { value } }) => {
                   setTitle(value);
@@ -57,16 +57,16 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
           componentId={SearchComponents.DISTRICTS}
           defaultQuery={() => ({
             aggs: {
-              [IndexFields.FIELD_PROJECT_DISTRICT_NAME]: {
+              [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: {
                 terms: {
-                  field: IndexFields.FIELD_PROJECT_DISTRICT_NAME,
+                  field: IndexFields.FIELD_PROJECT_DISTRICT_TITLE,
                   size: 500,
                   order: { _key: 'asc' }
                 }
               },
-              district_taxonomy_terms: {
+              districts_for_filters: {
                 terms: {
-                  field: 'name',
+                  field: 'district_title',
                   size: 500,
                   order: { _key: 'asc' }
                 }
@@ -75,14 +75,16 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
             query: languageFilter
           })}
           render={({ aggregations, setQuery }) => {
+            console.log(aggregations)
             return (
               <Dropdown
                 aggregations={aggregations}
-                indexKey={IndexFields.FIELD_PROJECT_DISTRICT_NAME}
-                taxonomyKey="district_taxonomy_terms"
+                indexKey={IndexFields.FIELD_PROJECT_DISTRICT_TITLE}
+                // TODO: change taxonomyKey name to something else
+                taxonomyKey="districts_for_filters"
                 icon={<IconLocation />}
-                label={Drupal.t('Valitse asuinalue listasta', {}, { context: 'District and project search form label' })}
-                placeholder={Drupal.t('Valitse alue', {}, { context: 'District and project search form label' })}
+                label={Drupal.t('Select the residential area from the list', {}, { context: 'District and project search form label' })}
+                placeholder={Drupal.t('Select area', {}, { context: 'District and project search form label' })}
                 setQuery={setQuery}
                 setValue={setDistricts}
                 value={districts}
@@ -96,7 +98,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
         size='s'
         initiallyOpen={isAccordionInitiallyOpen}
         headingLevel={4}
-        heading={Drupal.t('Tarkenna hankkeiden hakua', {}, { context: 'District and project search' })}
+        heading={Drupal.t('Refine the project search', {}, { context: 'District and project search' })}
         language={window.drupalSettings.path.currentLanguage || 'fi'}
         theme={{
           '--header-font-size': 'var(--fontsize-heading-xxs)',
@@ -131,8 +133,8 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                   aggregations={aggregations}
                   indexKey={IndexFields.FIELD_PROJECT_THEME_NAME}
                   taxonomyKey="project_theme_taxonomy_terms"
-                  label={Drupal.t('Hankkeen teema', {}, { context: 'District and project search form label' })}
-                  placeholder={Drupal.t('Kaikki teemat', {}, { context: 'District and project search form label' })}
+                  label={Drupal.t('Project theme', {}, { context: 'District and project search form label' })}
+                  placeholder={Drupal.t('All themes', {}, { context: 'District and project search form label' })}
                   setQuery={setQuery}
                   setValue={setThemes}
                   value={themes}
@@ -167,8 +169,8 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                   aggregations={aggregations}
                   indexKey={IndexFields.FIELD_PROJECT_PHASE_NAME}
                   taxonomyKey="project_phase_taxonomy_terms"
-                  label={Drupal.t('Hankkeen vaihe', {}, { context: 'District and project search form label' })}
-                  placeholder={Drupal.t('Kaikki vaiheet', {}, { context: 'District and project search form label' })}
+                  label={Drupal.t('Project stage', {}, { context: 'District and project search form label' })}
+                  placeholder={Drupal.t('All stages', {}, { context: 'District and project search form label' })}
                   setQuery={setQuery}
                   setValue={setPhases}
                   value={phases}
@@ -203,8 +205,8 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                   aggregations={aggregations}
                   indexKey={IndexFields.FIELD_PROJECT_TYPE_NAME}
                   taxonomyKey="project_type_taxonomy_terms"
-                  label={Drupal.t('Hankkeen tyyppi', {}, { context: 'District and project search form label' })}
-                  placeholder={Drupal.t('Kaikki tyypit', {}, { context: 'District and project search form label' })}
+                  label={Drupal.t('Project type', {}, { context: 'District and project search form label' })}
+                  placeholder={Drupal.t('All types', {}, { context: 'District and project search form label' })}
                   setQuery={setQuery}
                   setValue={setTypes}
                   value={types}

@@ -59,7 +59,7 @@ const ResultsContainer = (): JSX.Element => {
         }}
         renderNoResults={() => (
           <div className="districts-projects-search__listing__no-results">
-            <h2>{Drupal.t('Voi harmi! Emme löytäneet hakuehdoilla yhtään tulosta.', {}, {})}</h2>
+            <h2>{Drupal.t('Oh no! We did not find anything matching the search terms', {}, { context: 'District and project search' })}</h2>
             <p>{Drupal.t('Sivuillamme esitetään toistaiseksi vain osa Helsingin hankkeista ja asuinalueista. Voit kokeilla uudestaan poistamalla jonkin rajausehdoista tai aloittamalla alusta.', {}, {})}</p>
           </div>
         )}

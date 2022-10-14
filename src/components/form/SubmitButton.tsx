@@ -19,7 +19,7 @@ type Props = {
 
 export const ComponentMap = {
   [SearchComponents.TITLE]: `${IndexFields.TITLE}`,
-  [SearchComponents.DISTRICTS]: `${IndexFields.FIELD_PROJECT_DISTRICT_NAME}`,
+  [SearchComponents.DISTRICTS]: `${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}`,
   [SearchComponents.THEME]: `${IndexFields.FIELD_PROJECT_THEME_NAME}`,
   [SearchComponents.PHASE]: `${IndexFields.FIELD_PROJECT_PHASE_NAME}`,
   [SearchComponents.TYPE]: `${IndexFields.FIELD_PROJECT_TYPE_NAME}`
@@ -44,8 +44,8 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
         if (typeof state.value === 'string') {
           query.bool.should = [
             { wildcard: { [IndexFields.TITLE]: { value: `*${state.value.toLowerCase()}*` }}},
-            { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_NAME]: { value: `*${state.value.toLowerCase()}*` }}},
-            { wildcard: { [IndexFields.FIELD_DISTRICT_SUB_DISTRICTS_NAME]: { value: `*${state.value.toLowerCase()}*` }}},
+            { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: `*${state.value.toLowerCase()}*` }}},
+            { wildcard: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: `*${state.value.toLowerCase()}*` }}},
             { wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*` }}},
             { wildcard: { [IndexFields.FIELD_PROJECT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*` }}},
           ];
@@ -54,8 +54,8 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
           const terms: Array<object> = [];
           state.value.forEach((value: string) => {      
             terms.push({ term: { [IndexFields.TITLE]: value }});
-            terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_NAME]: value }});
-            terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUB_DISTRICTS_NAME]: value }});
+            terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: value }});
+            terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: value }});
           });
 
           query.bool.should.push(...terms);

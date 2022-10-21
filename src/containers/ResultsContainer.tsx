@@ -30,7 +30,7 @@ const ResultsContainer = (): JSX.Element => {
     <div ref={resultsWrapper}>
       <ResultsHeading />
       <ReactiveList
-        className="districts-projects-search__container"
+        className="district-project-search__container"
         componentId={SearchComponents.RESULTS}
         dataField={'id'}
         onPageChange={onPageChange}
@@ -46,11 +46,11 @@ const ResultsContainer = (): JSX.Element => {
           },
         })}
         react={{
-          and: [SearchComponents.SUBMIT]
+          and: [SearchComponents.SUBMIT, SearchComponents.FILTER_BULLETS]
         }}
         render={({ data }: any) => {
           return (
-            <ul className="districts-projects-search__listing">
+            <ul className="district-project-search__listing">
             {data.map((item: Result) => (
               <ResultCard key={item._id} {...item} />
             ))}
@@ -58,9 +58,9 @@ const ResultsContainer = (): JSX.Element => {
           )
         }}
         renderNoResults={() => (
-          <div className="districts-projects-search__listing__no-results">
+          <div className="district-project-search__listing__no-results">
             <h2>{Drupal.t('Oh no! We did not find anything matching the search terms', {}, { context: 'District and project search' })}</h2>
-            <p>{Drupal.t('Sivuillamme esitetään toistaiseksi vain osa Helsingin hankkeista ja asuinalueista. Voit kokeilla uudestaan poistamalla jonkin rajausehdoista tai aloittamalla alusta.', {}, {})}</p>
+            <p>{Drupal.t('Our website currently shows only some of the projects and residential areas of Helsinki. You can try again by removing some of the limiting search terms or by starting over.', {}, { context: 'District and project search' })}</p>
           </div>
         )}
         renderPagination={(props) => <Pagination {...props} />}

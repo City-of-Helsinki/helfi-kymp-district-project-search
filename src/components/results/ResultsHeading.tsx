@@ -16,17 +16,16 @@ function ResultsHeading(): JSX.Element {
       render={() => {
         return (
           <StateProvider
-            includeKeys={['value', 'hits']}
             render={({ searchState }) => {
               return (
-                <div className="district-and-projects-search__results_heading">
-                  <div className="district-and-projects-search__count__container">
-                    <span className="district-and-projects-search__count">
-                      <span className="district-and-projects-search__count-total">{searchState?.results?.hits?.total} </span>
-                      <span className="district-and-projects-search__count-label">{Drupal.t('search results', {}, { context: 'District and project search result heading' })} </span>
+                <div className="district-project-search__results_heading">
+                  <div className="district-project-search__count__container">
+                    <span className="district-project-search__count">
+                      <span className="district-project-search__count-total">{searchState?.results?.hits?.total} </span>
+                      <span className="district-project-search__count-label">{Drupal.t('search results', {}, { context: 'District and project search result heading' })} </span>
                     </span>
                   </div>
-                  <div className="district-and-projects-search__sort__container">
+                  <div className="district-project-search__sort__container">
                   </div>
                 </div>
               )

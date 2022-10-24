@@ -42,7 +42,7 @@ const ResultCard = ({
         <section className="content-tags" aria-label={Drupal.t('Tags', {}, {})}>
           <ul className="content-tags__tags content-tags__tags--static">
             <li className={`content-tags__tags__tag ${tagBgColor}`}>
-              <span>{Drupal.t(capitalize(content_type[0]), {}, {})}</span>
+              <span>{Drupal.t(capitalize(content_type[0]))}</span>
             </li>
           </ul>
         </section>

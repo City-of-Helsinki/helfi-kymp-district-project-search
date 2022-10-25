@@ -82,7 +82,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                 filterKey="districts_for_filters"
                 icon={<IconLocation />}
                 label={Drupal.t('Select the residential area from the list', {}, { context: 'District and project search form label' })}
-                placeholder={Drupal.t('Select area', {}, { context: 'District and project search form label' })}
+                placeholder={Drupal.t('All areas', {}, { context: 'District and project search' })}
                 setQuery={setQuery}
                 setValue={setDistricts}
                 value={districts}

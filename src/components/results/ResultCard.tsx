@@ -42,7 +42,8 @@ const ResultCard = ({
         <section className="content-tags" aria-label={Drupal.t('Tags')}>
           <ul className="content-tags__tags content-tags__tags--static">
             <li className={`content-tags__tags__tag ${tagBgColor}`}>
-              <span>{Drupal.t(capitalize(content_type[0]))}</span>
+              { content_type[0] === 'district' && <span>{Drupal.t('District', {}, { context: 'District and project search' })}</span> }
+              { content_type[0] === 'project' && <span>{Drupal.t('Project', {}, { context: 'District and project search' })}</span> }
             </li>
           </ul>
         </section>

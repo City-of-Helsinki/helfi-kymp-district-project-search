@@ -13,18 +13,18 @@ interface MetadataItemProps {
 export const MetadataItem = (props: MetadataItemProps): JSX.Element => {
   const { icon, label, items, projectExecutionSchedule, projectPlanSchedule } = props;
 
-  const getVisibleTime = (timestamp: number): string => {
-    return format(new Date(Number(timestamp) * 1000), 'M/Y');
+  const getVisibleTime = (dateString: number): string => {
+    return format(new Date(dateString), 'M/Y');
   };
   
-  const getHtmlTime = (timestamp: number): string => {
-    const published = new Date(Number(timestamp) * 1000);
+  const getHtmlTime = (dateString: number): string => {
+    const published = new Date(dateString);
     return `${format(published, 'Y-MM-dd')}T${format(published, 'HH:mm')}Z`;
   };
   
-  const getTimeItem = (timestamps: any): JSX.Element => (
-    timestamps.map((timestamp: number, i: number) => (
-      <time dateTime={getHtmlTime(timestamp)} key={`${timestamp}-${i}`}> {i !== 0 && "-"} {getVisibleTime(timestamp)}</time>
+  const getTimeItem = (dateStrings: any): JSX.Element => (
+    dateStrings.map((dateString: number, i: number) => (
+      <time dateTime={getHtmlTime(dateString)} key={`${dateString}-${i}`}> {i !== 0 && "-"} {getVisibleTime(dateString)}</time>
     ))
   );
 

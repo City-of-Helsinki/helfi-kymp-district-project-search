@@ -98,7 +98,7 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
       variant='primary'
       theme='black'
     >
-      {Drupal.t('Search')}
+      {Drupal.t('Search', {}, { context: 'District and project search' })}
     </Button>
   );
 };

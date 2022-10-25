@@ -37,14 +37,14 @@ export const MetadataItem = (props: MetadataItemProps): JSX.Element => {
 
           {projectPlanSchedule &&
             <span className="metadata__item--schedule metadata__item--schedule--plan-schedule">
-              {Drupal.t('planning', {}, {})}
+              {Drupal.t('planning')}
               {getTimeItem(projectPlanSchedule)}
             </span>
           }
 
           {projectExecutionSchedule &&
             <span className="metadata__item--schedule">
-              {Drupal.t('execution', {}, {})}
+              {Drupal.t('execution')}
               {getTimeItem(projectExecutionSchedule)}
             </span> 
           }

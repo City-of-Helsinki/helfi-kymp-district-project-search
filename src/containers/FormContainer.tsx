@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, FormEvent } from 'react';
 import { ReactiveComponent, StateProvider } from '@appbaseio/reactivesearch';
 import { TextInput, Accordion, IconLocation } from 'hds-react';
 
@@ -66,136 +66,48 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
     }
   };
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+  }
+
   return (
-    <div className="district-project-search-form__filters-container">
-      <div className="district-project-search-form__filters">
-        <ReactiveComponent
-          componentId={SearchComponents.TITLE}
-          defaultQuery={() => ({
-            query: languageFilter
-          })}
-          render={({ setQuery }) => {
-            return (
-              <TextInput
-                id="district-or-project-name"
-                label={Drupal.t('Name of residential area or project', {}, { context: 'District and project search form label' })}
-                placeholder={Drupal.t('Use a search word such as "Pasila"', {}, { context: 'District and project search form label' })}
-                defaultValue={title}
-                onChange={({ target: { value } }) => {
-                  setTitle(value);
-                  setQuery({value});
-                }}
-              />
-            )}}
-          URLParams={false}
-        />
-        <ReactiveComponent
-          componentId={SearchComponents.DISTRICTS}
-          defaultQuery={() => ({
-            aggs: {
-              [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: {
-                terms: {
-                  field: IndexFields.FIELD_PROJECT_DISTRICT_TITLE,
-                  size: 500,
-                  order: { _key: 'asc' }
-                }
-              },
-              districts_for_filters: {
-                terms: {
-                  field: 'district_title',
-                  size: 500,
-                  order: { _key: 'asc' }
-                }
-              }
-            },
-            query: languageFilter
-          })}
-          render={({ setQuery }) => {
-            return (
-              <StateProvider includeKeys={['value', 'aggregations']}>
-                {({ searchState }) => (
-                  <Dropdown
-                    componentId={SearchComponents.DISTRICTS}
-                    indexKey={IndexFields.FIELD_PROJECT_DISTRICT_TITLE}
-                    filterKey="districts_for_filters"
-                    icon={<IconLocation />}
-                    label={Drupal.t('Select the residential area from the list', {}, { context: 'District and project search form label' })}
-                    placeholder={Drupal.t('Select area', {}, { context: 'District and project search form label' })}
-                    setQuery={setQuery}
-                    searchState={searchState}
-                  />
-                )}
-            </StateProvider>
-            )}}
-          URLParams={false}
-        />
-      </div>
-      <Accordion
-        className='district-project-search-form__additional-filters'
-        size='s'
-        initiallyOpen={isAccordionInitiallyOpen}
-        headingLevel={4}
-        heading={Drupal.t('Refine the project search', {}, { context: 'District and project search' })}
-        language={window.drupalSettings.path.currentLanguage || 'fi'}
-        theme={{
-          '--header-font-size': 'var(--fontsize-heading-xxs)',
-          '--header-line-height': 'var(--lineheight-s)',
-        }}
-      >
-        <div className='district-project-search-form__filters'>
+    <form onSubmit={handleSubmit}>
+      <div className="district-project-search-form__filters-container">
+        <div className="district-project-search-form__filters">
           <ReactiveComponent
-            componentId={SearchComponents.THEME}
+            componentId={SearchComponents.TITLE}
             defaultQuery={() => ({
-              aggs: {
-                [IndexFields.FIELD_PROJECT_THEME_NAME]: {
-                  terms: {
-                    field: IndexFields.FIELD_PROJECT_THEME_NAME,
-                    size: 500,
-                    order: { _key: 'asc' }
-                  }
-                },
-                project_theme_taxonomy_terms: {
-                  terms: {
-                    field: 'project_theme_name',
-                    size: 500,
-                    order: { _key: 'asc' }
-                  }
-                }
-              },
-              query: languageFilter,
+              query: languageFilter
             })}
             render={({ setQuery }) => {
               return (
-                <StateProvider includeKeys={['value', 'aggregations']}>
-                  {({ searchState }) => (
-                    <Dropdown
-                      componentId={SearchComponents.THEME}
-                      indexKey={IndexFields.FIELD_PROJECT_THEME_NAME}
-                      filterKey="project_theme_taxonomy_terms"
-                      label={Drupal.t('Project theme', {}, { context: 'District and project search form label' })}
-                      placeholder={Drupal.t('All themes', {}, { context: 'District and project search form label' })}
-                      setQuery={setQuery}
-                      searchState={searchState}
-                    />
-                  )}
-                </StateProvider>
+                <TextInput
+                  id="district-or-project-name"
+                  label={Drupal.t('Name of residential area or project', {}, { context: 'District and project search form label' })}
+                  placeholder={Drupal.t('Use a search word such as "Pasila"', {}, { context: 'District and project search form label' })}
+                  defaultValue={title}
+                  onChange={({ target: { value } }) => {
+                    setTitle(value);
+                    setQuery({value});
+                  }}
+                />
               )}}
             URLParams={false}
           />
           <ReactiveComponent
-            componentId={SearchComponents.PHASE}
+            componentId={SearchComponents.DISTRICTS}
             defaultQuery={() => ({
               aggs: {
-                [IndexFields.FIELD_PROJECT_PHASE_NAME]: {
+                [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: {
                   terms: {
-                    field: IndexFields.FIELD_PROJECT_PHASE_NAME,
+                    field: IndexFields.FIELD_PROJECT_DISTRICT_TITLE,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
-                project_phase_taxonomy_terms: {
+                districts_for_filters: {
                   terms: {
-                    field: 'project_phase_name',
+                    field: 'district_title',
                     size: 500,
                     order: { _key: 'asc' }
                   }
@@ -208,104 +120,198 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
                 <StateProvider includeKeys={['value', 'aggregations']}>
                   {({ searchState }) => (
                     <Dropdown
-                      componentId={SearchComponents.PHASE}
-                      indexKey={IndexFields.FIELD_PROJECT_PHASE_NAME}
-                      filterKey="project_phase_taxonomy_terms"
-                      label={Drupal.t('Project stage', {}, { context: 'District and project search form label' })}
-                      placeholder={Drupal.t('All stages', {}, { context: 'District and project search form label' })}
+                      componentId={SearchComponents.DISTRICTS}
+                      indexKey={IndexFields.FIELD_PROJECT_DISTRICT_TITLE}
+                      filterKey="districts_for_filters"
+                      icon={<IconLocation />}
+                      label={Drupal.t('Select the residential area from the list', {}, { context: 'District and project search form label' })}
+                      placeholder={Drupal.t('Select area', {}, { context: 'District and project search form label' })}
                       setQuery={setQuery}
                       searchState={searchState}
                     />
                   )}
-                </StateProvider>
-              )}}
-            URLParams={false}
-          />
-          <ReactiveComponent
-            componentId={SearchComponents.TYPE}
-            defaultQuery={() => ({
-              aggs: {
-                [IndexFields.FIELD_PROJECT_TYPE_NAME]: {
-                  terms: {
-                    field: IndexFields.FIELD_PROJECT_TYPE_NAME,
-                    size: 500,
-                    order: { _key: 'asc' }
-                  }
-                },
-                project_type_taxonomy_terms: {
-                  terms: {
-                    field: 'project_type_name',
-                    size: 500,
-                    order: { _key: 'asc' }
-                  }
-                }
-              },
-              query: languageFilter
-            })}
-            render={({ setQuery }) => {
-              return (
-                <StateProvider includeKeys={['value', 'aggregations']}>
-                  {({ searchState }) => (
-                    <Dropdown
-                      componentId={SearchComponents.TYPE}
-                      indexKey={IndexFields.FIELD_PROJECT_TYPE_NAME}
-                      filterKey="project_type_taxonomy_terms"
-                      label={Drupal.t('Project type', {}, { context: 'District and project search form label' })}
-                      placeholder={Drupal.t('All types', {}, { context: 'District and project search form label' })}
-                      setQuery={setQuery}
-                      searchState={searchState}
-                    />
-                  )}
-                </StateProvider>
+              </StateProvider>
               )}}
             URLParams={false}
           />
         </div>
-      </Accordion>
-      <ReactiveComponent
-        componentId={SearchComponents.SUBMIT}
-        ref={submitButton}
-        render={({ setQuery }) => {
-          return (
-            <StateProvider includeKeys={['value']}>
-              {({ searchState }) => (
-                <div className='district-project-search-form__submit'>
-                  <SubmitButton
+        <Accordion
+          className='district-project-search-form__additional-filters'
+          size='s'
+          initiallyOpen={isAccordionInitiallyOpen}
+          headingLevel={4}
+          heading={Drupal.t('Refine the project search', {}, { context: 'District and project search' })}
+          language={window.drupalSettings.path.currentLanguage || 'fi'}
+          theme={{
+            '--header-font-size': 'var(--fontsize-heading-xxs)',
+            '--header-line-height': 'var(--lineheight-s)',
+          }}
+        >
+          <div className='district-project-search-form__filters'>
+            <ReactiveComponent
+              componentId={SearchComponents.THEME}
+              defaultQuery={() => ({
+                aggs: {
+                  [IndexFields.FIELD_PROJECT_THEME_NAME]: {
+                    terms: {
+                      field: IndexFields.FIELD_PROJECT_THEME_NAME,
+                      size: 500,
+                      order: { _key: 'asc' }
+                    }
+                  },
+                  project_theme_taxonomy_terms: {
+                    terms: {
+                      field: 'project_theme_name',
+                      size: 500,
+                      order: { _key: 'asc' }
+                    }
+                  }
+                },
+                query: languageFilter,
+              })}
+              render={({ setQuery }) => {
+                return (
+                  <StateProvider includeKeys={['value', 'aggregations']}>
+                    {({ searchState }) => (
+                      <Dropdown
+                        componentId={SearchComponents.THEME}
+                        indexKey={IndexFields.FIELD_PROJECT_THEME_NAME}
+                        filterKey="project_theme_taxonomy_terms"
+                        label={Drupal.t('Project theme', {}, { context: 'District and project search form label' })}
+                        placeholder={Drupal.t('All themes', {}, { context: 'District and project search form label' })}
+                        setQuery={setQuery}
+                        searchState={searchState}
+                      />
+                    )}
+                  </StateProvider>
+                )}}
+              URLParams={false}
+            />
+            <ReactiveComponent
+              componentId={SearchComponents.PHASE}
+              defaultQuery={() => ({
+                aggs: {
+                  [IndexFields.FIELD_PROJECT_PHASE_NAME]: {
+                    terms: {
+                      field: IndexFields.FIELD_PROJECT_PHASE_NAME,
+                      size: 500,
+                      order: { _key: 'asc' }
+                    }
+                  },
+                  project_phase_taxonomy_terms: {
+                    terms: {
+                      field: 'project_phase_name',
+                      size: 500,
+                      order: { _key: 'asc' }
+                    }
+                  }
+                },
+                query: languageFilter
+              })}
+              render={({ setQuery }) => {
+                return (
+                  <StateProvider includeKeys={['value', 'aggregations']}>
+                    {({ searchState }) => (
+                      <Dropdown
+                        componentId={SearchComponents.PHASE}
+                        indexKey={IndexFields.FIELD_PROJECT_PHASE_NAME}
+                        filterKey="project_phase_taxonomy_terms"
+                        label={Drupal.t('Project stage', {}, { context: 'District and project search form label' })}
+                        placeholder={Drupal.t('All stages', {}, { context: 'District and project search form label' })}
+                        setQuery={setQuery}
+                        searchState={searchState}
+                      />
+                    )}
+                  </StateProvider>
+                )}}
+              URLParams={false}
+            />
+            <ReactiveComponent
+              componentId={SearchComponents.TYPE}
+              defaultQuery={() => ({
+                aggs: {
+                  [IndexFields.FIELD_PROJECT_TYPE_NAME]: {
+                    terms: {
+                      field: IndexFields.FIELD_PROJECT_TYPE_NAME,
+                      size: 500,
+                      order: { _key: 'asc' }
+                    }
+                  },
+                  project_type_taxonomy_terms: {
+                    terms: {
+                      field: 'project_type_name',
+                      size: 500,
+                      order: { _key: 'asc' }
+                    }
+                  }
+                },
+                query: languageFilter
+              })}
+              render={({ setQuery }) => {
+                return (
+                  <StateProvider includeKeys={['value', 'aggregations']}>
+                    {({ searchState }) => (
+                      <Dropdown
+                        componentId={SearchComponents.TYPE}
+                        indexKey={IndexFields.FIELD_PROJECT_TYPE_NAME}
+                        filterKey="project_type_taxonomy_terms"
+                        label={Drupal.t('Project type', {}, { context: 'District and project search form label' })}
+                        placeholder={Drupal.t('All types', {}, { context: 'District and project search form label' })}
+                        setQuery={setQuery}
+                        searchState={searchState}
+                      />
+                    )}
+                  </StateProvider>
+                )}}
+              URLParams={false}
+            />
+          </div>
+        </Accordion>
+        <ReactiveComponent
+          componentId={SearchComponents.SUBMIT}
+          ref={submitButton}
+          render={({ setQuery }) => {
+            return (
+              <StateProvider includeKeys={['value']}>
+                {({ searchState }) => (
+                  <div className='district-project-search-form__submit'>
+                    <SubmitButton
+                      searchState={searchState}
+                      setQuery={setQuery}
+                    />
+                  </div>
+                )}
+              </StateProvider>
+            );
+          }}
+          URLParams={false}
+        />
+        <ReactiveComponent
+          componentId={SearchComponents.FILTER_BULLETS}
+          render={({ setQuery }) => {
+            return (
+              <StateProvider includeKeys={['value', 'data', 'query']}>
+                {({ searchState }) => (
+                  <SelectionsContainer
                     searchState={searchState}
                     setQuery={setQuery}
+                    clearSelection={clearSelection}
+                    //clearSelections={clearSelections}
+                    // filters={{
+                    //   districts: districts,
+                    //   project_themes: themes,
+                    //   project_phases: phases,
+                    //   project_types: types
+                    // }}
                   />
-                </div>
-              )}
-            </StateProvider>
-          );
-        }}
-        URLParams={true}
-      />
-      <ReactiveComponent
-        componentId={SearchComponents.FILTER_BULLETS}
-        render={({ setQuery }) => {
-          return (
-            <StateProvider includeKeys={['value', 'data', 'query']}>
-              {({ searchState }) => (
-                <SelectionsContainer
-                  searchState={searchState}
-                  setQuery={setQuery}
-                  clearSelection={clearSelection}
-                  //clearSelections={clearSelections}
-                  // filters={{
-                  //   districts: districts,
-                  //   project_themes: themes,
-                  //   project_phases: phases,
-                  //   project_types: types
-                  // }}
-                />
-              )}
-            </StateProvider>
-          );
-        }}
-        URLParams={false}
-      />
-    </div>
+                )}
+              </StateProvider>
+            );
+          }}
+          URLParams={false}
+        />
+      </div>
+    </form>
   );
 };
 export default FormContainer;

@@ -1,20 +1,13 @@
 import { Button } from 'hds-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import IndexFields from '../../enum/IndexFields';
-import SearchComponents from '../../enum/SearchComponents';
 import { useLanguageQuery } from '../../hooks/useLanguageQuery';
-import type BooleanQuery from '../../types/BooleanQuery';
 import { getQuery } from '../../helpers/helpers';
+import type SearchState from '../../types/SearchState';
 
-type SearchStateItem = {
-  value: Array<string> | string;
-};
 
 type Props = {
-  searchState: {
-    [key: string]: SearchStateItem;
-  };
+  searchState: SearchState;
   setQuery: Function;
 };
 
@@ -41,7 +34,7 @@ export const SubmitButton = ({ searchState, setQuery }: Props) => {
       variant='primary'
       theme='black'
     >
-      {Drupal.t('Search')}
+      {Drupal.t('Search', {}, { context: 'District and project search' })}
     </Button>
   );
 };

@@ -1,3 +1,5 @@
+import { StateProvider } from '@appbaseio/reactivesearch';
+
 import SearchComponents from '../enum/SearchComponents';
 import type OptionType from '../types/OptionType';
 import FormContainer from './FormContainer';
@@ -33,7 +35,11 @@ const SearchContainer = (): JSX.Element => {
 
   return (
     <div>
-      <FormContainer initialState={getInitialParams()}/>
+        <StateProvider includeKeys={['value', 'aggregations']}>
+          {({ searchState }) => (
+            <FormContainer initialState={getInitialParams()} searchState={searchState} />
+          )}
+      </StateProvider>
       <ResultsContainer />
     </div>
   );

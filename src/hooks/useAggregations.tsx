@@ -7,7 +7,7 @@ export default function useAggregations(aggregations: Aggregations, indexKey: st
   if (aggregations && aggregations[indexKey] && aggregations[indexKey].buckets) {
 
     options = aggregations[filterKey].buckets.map((bucket) => {
-      let label = `${capitalize(bucket.key)}`;
+      let label = `${capitalize(bucket.key)} (0)`;
       const match = aggregations[indexKey].buckets.find((item: any) => item.key === bucket.key);
   
       if (match !== undefined) {
@@ -19,8 +19,6 @@ export default function useAggregations(aggregations: Aggregations, indexKey: st
         value: bucket.key
       }
     });
-
-    return options;
   }
 
   return options;

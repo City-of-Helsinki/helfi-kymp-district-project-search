@@ -46,7 +46,7 @@ const ResultsContainer = (): JSX.Element => {
           },
         })}
         react={{
-          and: [SearchComponents.SUBMIT, SearchComponents.FILTER_BULLETS]
+          and: [SearchComponents.FILTER_BULLETS, SearchComponents.SUBMIT]
         }}
         render={({ data }: any) => {
           return (

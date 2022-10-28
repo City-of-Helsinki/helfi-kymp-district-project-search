@@ -1,5 +1,5 @@
-import { useRef, useState, FormEvent } from 'react';
-import { ReactiveComponent, StateProvider } from '@appbaseio/reactivesearch';
+import { useRef, useState } from 'react';
+import { ReactiveComponent } from '@appbaseio/reactivesearch';
 import { TextInput, Accordion, IconLocation } from 'hds-react';
 
 import Dropdown from '../components/form/Dropdown';
@@ -9,6 +9,8 @@ import SubmitButton from '../components/form/SubmitButton';
 import IndexFields from '../enum/IndexFields';
 import useLanguageQuery from '../hooks/useLanguageQuery';
 import type OptionType from '../types/OptionType';
+import { getQuery } from '../helpers/helpers';
+
 
 type FormContainerProps = {
   initialState: {
@@ -19,59 +21,66 @@ type FormContainerProps = {
     phases: OptionType[];
     types: OptionType[];
   };
+  searchState: any;
 };
 
-const FormContainer = ({ initialState }: FormContainerProps) => {
-  const [title, setTitle] = useState(initialState.title);
-  const [districts, setDistricts] = useState(initialState.districts);
-  const [themes, setThemes] = useState(initialState.themes);
-  const [phases, setPhases] = useState(initialState.phases);
-  const [types, setTypes] = useState(initialState.types);
+const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
+  const [title, setTitle] = useState<string>();
   const [isAccordionInitiallyOpen] = useState(initialState.isParamsSet);
   const languageFilter = useLanguageQuery();
   const submitButton = useRef<any>(null);
+  const districtRef = useRef<any>(null);
+  const themeRef = useRef<any>(null);
+  const phaseRef = useRef<any>(null);
+  const typeRef = useRef<any>(null);
 
   const clearSelection = (selection: OptionType, selectionType: string) => {
-    let state;
-    let stateHandler;
+    let ref;
 
     switch (selectionType) {
       case 'districts':
-        state = [...districts];
-        stateHandler = setDistricts;
+        ref = districtRef;
         break;
-      case 'themes':
-        state = [...themes];
-        stateHandler = setThemes;
+      case 'project_theme':
+        ref = themeRef;
         break;
-      case 'phases':
-        state = [...phases];
-        stateHandler = setPhases;
+      case 'project_phase':
+        ref = phaseRef;
         break;
-      case 'types':
-        state = [...types];
-        stateHandler = setTypes;
+      case 'project_type':
+        ref = typeRef;
         break;
       default:
         break;
     }
 
-    const index = state?.findIndex((option) => {
+    const newValue = {...searchState}
+
+    const index = newValue[selectionType].value?.findIndex((option: OptionType) => {
       return option.value === selection.value;
     });
 
-    if (index !== undefined && state && stateHandler) {
-      state.splice(index, 1);
-      stateHandler(state);
+    if (index !== undefined) {
+      newValue[selectionType].value.splice(index, 1);
+    }
+
+    ref?.current.setQuery({ value: newValue[selectionType].value });
+    submitButton.current.setQuery(getQuery({searchState: newValue, languageFilter}));
+
+  };
+
+  const clearSelections = () => {
+    if (submitButton && submitButton.current) {
+      districtRef.current.setQuery({ query: null });
+      themeRef.current.setQuery({ query: null });
+      phaseRef.current.setQuery({ query: null });
+      typeRef.current.setQuery({ query: null });
+      submitButton.current.setQuery({ query: null });
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-  }
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(e) => e.preventDefault()}>
       <div className="district-project-search-form__filters-container">
         <div className="district-project-search-form__filters">
           <ReactiveComponent
@@ -96,6 +105,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
           />
           <ReactiveComponent
             componentId={SearchComponents.DISTRICTS}
+            ref={districtRef}
             defaultQuery={() => ({
               aggs: {
                 [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: {
@@ -117,20 +127,16 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
             })}
             render={({ setQuery }) => {
               return (
-                <StateProvider includeKeys={['value', 'aggregations']}>
-                  {({ searchState }) => (
-                    <Dropdown
-                      componentId={SearchComponents.DISTRICTS}
-                      indexKey={IndexFields.FIELD_PROJECT_DISTRICT_TITLE}
-                      filterKey="districts_for_filters"
-                      icon={<IconLocation />}
-                      label={Drupal.t('Select the residential area from the list', {}, { context: 'District and project search form label' })}
-                      placeholder={Drupal.t('Select area', {}, { context: 'District and project search form label' })}
-                      setQuery={setQuery}
-                      searchState={searchState}
-                    />
-                  )}
-              </StateProvider>
+                <Dropdown
+                  componentId={SearchComponents.DISTRICTS}
+                  indexKey={IndexFields.FIELD_PROJECT_DISTRICT_TITLE}
+                  filterKey="districts_for_filters"
+                  icon={<IconLocation />}
+                  label={Drupal.t('Select the residential area from the list', {}, { context: 'District and project search form label' })}
+                  placeholder={Drupal.t('Select area', {}, { context: 'District and project search form label' })}
+                  setQuery={setQuery}
+                  searchState={searchState}
+                />
               )}}
             URLParams={false}
           />
@@ -150,6 +156,7 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
           <div className='district-project-search-form__filters'>
             <ReactiveComponent
               componentId={SearchComponents.THEME}
+              ref={themeRef}
               defaultQuery={() => ({
                 aggs: {
                   [IndexFields.FIELD_PROJECT_THEME_NAME]: {
@@ -171,24 +178,21 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
               })}
               render={({ setQuery }) => {
                 return (
-                  <StateProvider includeKeys={['value', 'aggregations']}>
-                    {({ searchState }) => (
-                      <Dropdown
-                        componentId={SearchComponents.THEME}
-                        indexKey={IndexFields.FIELD_PROJECT_THEME_NAME}
-                        filterKey="project_theme_taxonomy_terms"
-                        label={Drupal.t('Project theme', {}, { context: 'District and project search form label' })}
-                        placeholder={Drupal.t('All themes', {}, { context: 'District and project search form label' })}
-                        setQuery={setQuery}
-                        searchState={searchState}
-                      />
-                    )}
-                  </StateProvider>
+                  <Dropdown
+                    componentId={SearchComponents.THEME}
+                    indexKey={IndexFields.FIELD_PROJECT_THEME_NAME}
+                    filterKey="project_theme_taxonomy_terms"
+                    label={Drupal.t('Project theme', {}, { context: 'District and project search form label' })}
+                    placeholder={Drupal.t('All themes', {}, { context: 'District and project search form label' })}
+                    setQuery={setQuery}
+                    searchState={searchState}
+                  />
                 )}}
               URLParams={false}
             />
             <ReactiveComponent
               componentId={SearchComponents.PHASE}
+              ref={phaseRef}
               defaultQuery={() => ({
                 aggs: {
                   [IndexFields.FIELD_PROJECT_PHASE_NAME]: {
@@ -210,24 +214,21 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
               })}
               render={({ setQuery }) => {
                 return (
-                  <StateProvider includeKeys={['value', 'aggregations']}>
-                    {({ searchState }) => (
-                      <Dropdown
-                        componentId={SearchComponents.PHASE}
-                        indexKey={IndexFields.FIELD_PROJECT_PHASE_NAME}
-                        filterKey="project_phase_taxonomy_terms"
-                        label={Drupal.t('Project stage', {}, { context: 'District and project search form label' })}
-                        placeholder={Drupal.t('All stages', {}, { context: 'District and project search form label' })}
-                        setQuery={setQuery}
-                        searchState={searchState}
-                      />
-                    )}
-                  </StateProvider>
+                  <Dropdown
+                    componentId={SearchComponents.PHASE}
+                    indexKey={IndexFields.FIELD_PROJECT_PHASE_NAME}
+                    filterKey="project_phase_taxonomy_terms"
+                    label={Drupal.t('Project stage', {}, { context: 'District and project search form label' })}
+                    placeholder={Drupal.t('All stages', {}, { context: 'District and project search form label' })}
+                    setQuery={setQuery}
+                    searchState={searchState}
+                  />
                 )}}
               URLParams={false}
             />
             <ReactiveComponent
               componentId={SearchComponents.TYPE}
+              ref={typeRef}
               defaultQuery={() => ({
                 aggs: {
                   [IndexFields.FIELD_PROJECT_TYPE_NAME]: {
@@ -249,19 +250,15 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
               })}
               render={({ setQuery }) => {
                 return (
-                  <StateProvider includeKeys={['value', 'aggregations']}>
-                    {({ searchState }) => (
-                      <Dropdown
-                        componentId={SearchComponents.TYPE}
-                        indexKey={IndexFields.FIELD_PROJECT_TYPE_NAME}
-                        filterKey="project_type_taxonomy_terms"
-                        label={Drupal.t('Project type', {}, { context: 'District and project search form label' })}
-                        placeholder={Drupal.t('All types', {}, { context: 'District and project search form label' })}
-                        setQuery={setQuery}
-                        searchState={searchState}
-                      />
-                    )}
-                  </StateProvider>
+                  <Dropdown
+                    componentId={SearchComponents.TYPE}
+                    indexKey={IndexFields.FIELD_PROJECT_TYPE_NAME}
+                    filterKey="project_type_taxonomy_terms"
+                    label={Drupal.t('Project type', {}, { context: 'District and project search form label' })}
+                    placeholder={Drupal.t('All types', {}, { context: 'District and project search form label' })}
+                    setQuery={setQuery}
+                    searchState={searchState}
+                  />
                 )}}
               URLParams={false}
             />
@@ -272,16 +269,12 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
           ref={submitButton}
           render={({ setQuery }) => {
             return (
-              <StateProvider includeKeys={['value']}>
-                {({ searchState }) => (
-                  <div className='district-project-search-form__submit'>
-                    <SubmitButton
-                      searchState={searchState}
-                      setQuery={setQuery}
-                    />
-                  </div>
-                )}
-              </StateProvider>
+              <div className='district-project-search-form__submit'>
+                <SubmitButton
+                  searchState={searchState}
+                  setQuery={setQuery}
+                />
+              </div>
             );
           }}
           URLParams={false}
@@ -290,22 +283,12 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
           componentId={SearchComponents.FILTER_BULLETS}
           render={({ setQuery }) => {
             return (
-              <StateProvider includeKeys={['value', 'data', 'query']}>
-                {({ searchState }) => (
-                  <SelectionsContainer
-                    searchState={searchState}
-                    setQuery={setQuery}
-                    clearSelection={clearSelection}
-                    //clearSelections={clearSelections}
-                    // filters={{
-                    //   districts: districts,
-                    //   project_themes: themes,
-                    //   project_phases: phases,
-                    //   project_types: types
-                    // }}
-                  />
-                )}
-              </StateProvider>
+              <SelectionsContainer
+                searchState={searchState}
+                setQuery={setQuery}
+                clearSelection={clearSelection}
+                clearSelections={clearSelections}
+              />
             );
           }}
           URLParams={false}
@@ -314,4 +297,5 @@ const FormContainer = ({ initialState }: FormContainerProps) => {
     </form>
   );
 };
+
 export default FormContainer;

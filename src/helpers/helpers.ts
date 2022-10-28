@@ -1,21 +1,17 @@
 import IndexFields from '../enum/IndexFields';
 import SearchComponents from '../enum/SearchComponents';
 import type BooleanQuery from '../types/BooleanQuery';
+import type OptionType from '../types/OptionType';
+import type SearchState from '../types/SearchState';
+import type FiltersType from '../types/FiltersType';
 
 
-type SearchStateItem = {
-  value: Array<string> | string;
-};
-
-type Props = {
-  searchState?: {
-    [key: string]: SearchStateItem;
-  };
+type GetQueryProps = {
+  searchState?: SearchState
   languageFilter: any
 };
 
-
-export const ComponentMap = {
+const ComponentMap = {
   [SearchComponents.TITLE]: `${IndexFields.TITLE}`,
   [SearchComponents.DISTRICTS]: `${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}`,
   [SearchComponents.THEME]: `${IndexFields.FIELD_PROJECT_THEME_NAME}`,
@@ -23,7 +19,7 @@ export const ComponentMap = {
   [SearchComponents.TYPE]: `${IndexFields.FIELD_PROJECT_TYPE_NAME}`
 };
 
-export const getQuery = ({ searchState, languageFilter }: Props) => {
+export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
   let query: BooleanQuery = {
     bool: {
       must: [],
@@ -33,7 +29,7 @@ export const getQuery = ({ searchState, languageFilter }: Props) => {
   };
 
   Object.keys(ComponentMap).forEach((key: string) => {
-    const state = searchState && searchState[key] || null;
+    const state = searchState?.[key] || null;
 
     if (state && state.value) {
       if (typeof state.value === 'string') {
@@ -46,7 +42,7 @@ export const getQuery = ({ searchState, languageFilter }: Props) => {
         ];
       }
       else if (key === SearchComponents.DISTRICTS) {
-        const terms: Array<object> = [];
+        const terms: object[] = [];
         state.value.forEach((value: string) => {
           terms.push({ term: { [IndexFields.TITLE]: value }});
           terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: value }});
@@ -71,9 +67,9 @@ export const getQuery = ({ searchState, languageFilter }: Props) => {
 
   return {
     query: query,
+    value: Number(searchState?.submit?.value) + 1 || 0
   };
 }
-
 
 export const capitalize = (s: string) => {
   if (typeof s !== 'string') {
@@ -85,3 +81,21 @@ export const capitalize = (s: string) => {
 export const getUrlParams = () => {
   return new URLSearchParams(window.location.search);
 }
+
+export const transformSearchState = (searchState: SearchState, componentIds: string[]): FiltersType => {
+  const filtered = Object.keys(searchState)
+    .filter(key => componentIds.includes(key) && searchState[key].value != null)
+    .reduce((acc: any, curr: any) => {
+      acc[curr] = searchState[curr];
+      return acc;
+  }, []);
+
+  const filters = Object.keys(filtered).reduce((acc: any, current: any) => {
+    const options: OptionType[] = filtered[current].value && filtered[current].value.map((value: string) => ({ label: capitalize(value), value: value }));
+    acc[current] = options;
+    
+    return acc;
+  }, {});
+
+  return filters
+};

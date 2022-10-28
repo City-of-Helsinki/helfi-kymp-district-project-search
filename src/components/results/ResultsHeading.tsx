@@ -22,7 +22,7 @@ function ResultsHeading(): JSX.Element {
                   <div className="district-project-search__count__container">
                     <span className="district-project-search__count">
                       <span className="district-project-search__count-total">{searchState?.results?.hits?.total} </span>
-                      <span className="district-project-search__count-label">{Drupal.t('search results', {}, { context: 'District and project search result heading' })} </span>
+                      <span className="district-project-search__count-label">{Drupal.t('search results', {}, { context: 'District and project search' })} </span>
                     </span>
                   </div>
                   <div className="district-project-search__sort__container">

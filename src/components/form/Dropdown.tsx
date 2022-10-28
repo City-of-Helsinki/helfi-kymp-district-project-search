@@ -73,7 +73,6 @@ export const Dropdown = ({
         clearButtonAriaLabel={clearButtonAriaLabel}
         label={label}
         icon={icon}
-        // @ts-ignore
         options={options}
         onChange={(value: OptionType[]) => {
           setValue(value);

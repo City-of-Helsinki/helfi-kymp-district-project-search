@@ -73,7 +73,7 @@ const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: S
             onClick={clearSelections}
             variant='supplementary'
           >
-            {Drupal.t('Clear selections', {}, { context: 'District and project search clear selections' })}
+            {Drupal.t('Clear selections', {}, { context: 'District and project search' })}
           </Button>
         </li>
       </ul>

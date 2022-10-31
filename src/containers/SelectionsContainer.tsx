@@ -46,7 +46,11 @@ const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: S
           key={option.value}
         >
           <Button
-            aria-label={`${t('Remove', {}, {})} ${option.label} ${t('from search results', {}, { context: 'Search item aria label' })}`}
+            aria-label={Drupal.t(
+              'Remove @item from search results',
+              { '@item': option.value },
+              { context: 'Search: remove item aria label' }
+            )}
             className='district-project-search-form__remove-selection-button'
             iconRight={<IconCross />}
             variant='supplementary'

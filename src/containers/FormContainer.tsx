@@ -35,6 +35,7 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
   const typeRef = useRef<any>(null);
 
   const clearSelection = (selection: OptionType, selectionType: string) => {
+    const newValue = {...searchState}
     let ref;
 
     switch (selectionType) {
@@ -54,10 +55,8 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
         break;
     }
 
-    const newValue = {...searchState}
-
-    const index = newValue[selectionType].value?.findIndex((option: OptionType) => {
-      return option.value === selection.value;
+    const index = newValue[selectionType].value?.findIndex((option: string) => {
+      return option === selection.value;
     });
 
     if (index !== undefined) {

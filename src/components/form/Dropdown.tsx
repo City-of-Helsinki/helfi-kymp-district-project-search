@@ -6,7 +6,6 @@ import useAggregations from '../../hooks/useAggregations';
 import type { Aggregations } from '../../types/Aggregations';
 import type OptionType from '../../types/OptionType';
 import type SearchState from '../../types/SearchState';
-import { capitalize } from '../../helpers/helpers';
 
 
 type DropdownProps = Omit<
@@ -30,12 +29,12 @@ const getAggregations = (searchStateValues: any, componentId: string) => {
   return !searchStateValues?.[componentId]?.aggregations ? [] : searchStateValues[componentId].aggregations;
 };
 
-const getDropdownOptions = (searchStateValue: any, componentId: string): OptionType[]=> {
+const getDropdownValues = (searchStateValue: any, componentId: string, options: OptionType[]): OptionType[]=> {
   if (!searchStateValue?.[componentId]?.value) {
     return [];
   }
 
-  return searchStateValue[componentId].value.map((value: string) => ({ label: capitalize(value), value: value }));
+  return options.filter(item => searchStateValue[componentId].value.includes(item.value));
 };
 
 export const Dropdown = ({
@@ -53,8 +52,8 @@ export const Dropdown = ({
 }: DropdownProps): JSX.Element => {
   const aggregations: Aggregations = getAggregations(searchState, componentId)
   const options: OptionType[] = useAggregations(aggregations, indexKey, filterKey);
-  const [value, setValue] = useState<OptionType[]>(() => getDropdownOptions(searchState, componentId));
-
+  const [value, setValue] = useState<OptionType[]>(() => getDropdownValues(searchState, componentId, options));
+  
   useEffect(() => {
     if (!value || !value.length) {
       setQuery({ value: null });
@@ -64,7 +63,7 @@ export const Dropdown = ({
   }, [value, setQuery]);
 
   useEffect(() => {
-    setValue(getDropdownOptions(searchState, componentId))
+    setValue(getDropdownValues(searchState, componentId, options))
   }, [searchState]);
 
   return (
@@ -74,8 +73,9 @@ export const Dropdown = ({
         label={label}
         icon={icon}
         options={options}
-        onChange={(value: OptionType[]) => {
-          setValue(value);
+        onChange={(values: OptionType[]) => {
+         let uniqueValues = values.filter((val, index, array) => array.findIndex(t => t.value === val.value) === index);
+          setValue(uniqueValues);
         }}
         placeholder={placeholder}
         multiselect={true}

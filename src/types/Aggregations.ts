@@ -1,6 +1,10 @@
-type AggregationItem = {
+export type AggregationItem = {
   key: string;
   doc_count: number;
+};
+
+export type CustomAggs = {
+  [key: string]: AggregationItem[];
 };
 
 type Aggregation = {

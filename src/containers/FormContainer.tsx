@@ -114,6 +114,20 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
                     order: { _key: 'asc' }
                   }
                 },
+                [IndexFields.TITLE]: {
+                  terms: {
+                    field: IndexFields.TITLE,
+                    size: 500,
+                    order: { _key: 'asc' }
+                  }
+                },
+                [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: {
+                  terms: {
+                    field: IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE,
+                    size: 500,
+                    order: { _key: 'asc' }
+                  }
+                },
                 districts_for_filters: {
                   terms: {
                     field: 'district_title',

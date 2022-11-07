@@ -22,7 +22,7 @@ const ResultsContainer = (): JSX.Element => {
     }
 
     if (Math.abs(resultsWrapper.current.getBoundingClientRect().y) < window.pageYOffset) {
-      resultsWrapper.current.scrollIntoView();
+      resultsWrapper.current.scrollIntoView({behavior: "smooth"});
     }
   };
 

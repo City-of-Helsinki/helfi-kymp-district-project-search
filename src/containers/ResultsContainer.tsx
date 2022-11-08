@@ -22,7 +22,7 @@ const ResultsContainer = (): JSX.Element => {
     }
 
     if (Math.abs(resultsWrapper.current.getBoundingClientRect().y) < window.pageYOffset) {
-      resultsWrapper.current.scrollIntoView();
+      resultsWrapper.current.scrollIntoView({behavior: "smooth"});
     }
   };
 
@@ -46,7 +46,7 @@ const ResultsContainer = (): JSX.Element => {
           },
         })}
         react={{
-          and: [SearchComponents.SUBMIT]
+          and: [SearchComponents.FILTER_BULLETS, SearchComponents.SUBMIT]
         }}
         render={({ data }: any) => {
           return (
@@ -59,7 +59,7 @@ const ResultsContainer = (): JSX.Element => {
         }}
         renderNoResults={() => (
           <div className="district-project-search__listing__no-results">
-            <h2>{Drupal.t('Oh no! We did not find anything matching the search terms', {}, { context: 'District and project search' })}</h2>
+            <h2>{Drupal.t('Oh no! We did not find anything matching the search terms.', {}, { context: 'District and project search' })}</h2>
             <p>{Drupal.t('Our website currently shows only some of the projects and residential areas of Helsinki. You can try again by removing some of the limiting search terms or by starting over.', {}, { context: 'District and project search' })}</p>
           </div>
         )}

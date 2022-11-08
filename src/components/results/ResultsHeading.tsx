@@ -16,7 +16,6 @@ function ResultsHeading(): JSX.Element {
       render={() => {
         return (
           <StateProvider
-            includeKeys={['value', 'hits']}
             render={({ searchState }) => {
               return (
                 <div className="district-project-search__results_heading">

@@ -63,6 +63,10 @@ export const Pagination = ({ pages, totalPages, currentPage, setPage, setSize }:
       >
         {prevPageExists ? (
           <a
+          aria-label={
+            Drupal.t('Go to previous page number', {}, { context: 'Pagination previous page link title' }) +
+              ` ${currentPage}`
+            }
             className="hds-button hds-pagination__button-prev"
             href={`?${SearchComponents.RESULTS}=${currentPage - 1}`}
             onClick={(e) => {
@@ -70,7 +74,10 @@ export const Pagination = ({ pages, totalPages, currentPage, setPage, setSize }:
                 setPageWithPrevent(e, currentPage - 1);
               }
             }}
-            title={Drupal.t('Go to previous page', {}, { context: 'Pagination previous page link title' })}
+            title={
+              Drupal.t('Go to previous page number', {}, { context: 'Pagination previous page link title' }) +
+              ` ${currentPage}`
+            }
             type="button"
             rel="prev"
             role="button"
@@ -119,6 +126,7 @@ export const Pagination = ({ pages, totalPages, currentPage, setPage, setSize }:
           {prevPages.map((pageIndex, i) => (
             <li className="pager__item" key={i}>
               <a
+                aria-label={Drupal.t('Go to page @key', { '@key': pageIndex + 1 })}
                 href={`?${SearchComponents.RESULTS}=${pageIndex + 1}`}
                 className="hds-pagination__item-link"
                 onClick={(e) => setPageWithPrevent(e, pageIndex)}
@@ -139,6 +147,7 @@ export const Pagination = ({ pages, totalPages, currentPage, setPage, setSize }:
           {nextPages.map((pageIndex, i) => (
             <li className="pager__item" key={i}>
               <a
+                aria-label={Drupal.t('Go to page @key', { '@key': pageIndex + 1 })}
                 href={`?${SearchComponents.RESULTS}=${pageIndex + 1}`}
                 className="hds-pagination__item-link"
                 onClick={(e) => setPageWithPrevent(e, pageIndex)}
@@ -169,14 +178,21 @@ export const Pagination = ({ pages, totalPages, currentPage, setPage, setSize }:
         </ul>
         {nextPageExists ? (
           <a
+            aria-label={
+              Drupal.t('Go to next page number', {}, { context: 'Pagination next page link title' }) +
+              ` ${currentPage + 2}`
+            }
             className="hds-button hds-pagination__button-next"
-            href={`?${SearchComponents.RESULTS}=${currentPage - 1}`}
+            href={`?${SearchComponents.RESULTS}=${currentPage + 2}`}
             onClick={(e) => {
               if (nextPageExists) {
                 setPageWithPrevent(e, currentPage + 1);
               }
             }}
-            title={Drupal.t('Go to next page', {}, { context: 'Pagination next page link title' })}
+            title={
+              Drupal.t('Go to next page number', {}, { context: 'Pagination next page link title' }) +
+              ` ${currentPage + 2}`
+            }
             type="button"
             rel="next"
             role="button"

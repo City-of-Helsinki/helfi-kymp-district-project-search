@@ -7,7 +7,8 @@ export const SearchComponents = {
   RESULTS: 'results',
   RESULT_STATS: 'result_stats',
   SUBMIT: 'submit',
-  FILTER_BULLETS: 'filter_bullets'
+  FILTER_BULLETS: 'filter_bullets',
+  SORT: 'sort'
 };
 
 

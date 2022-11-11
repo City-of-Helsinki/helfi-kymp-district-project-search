@@ -20,8 +20,8 @@ const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: S
 
   // Check if searchState is changed by submit button.
   useEffect(() => {
-    if (Number(searchState?.submit?.value) !== submitButtonValue) {
-      setSubmitButtonValue(Number(searchState?.submit?.value) || 0);
+    if (searchState?.submit?.value && Number(searchState?.submit?.value) !== submitButtonValue) {
+      setSubmitButtonValue(Number(searchState.submit.value));
     }
   }, [searchState]);
 

@@ -7,8 +7,9 @@ import type FiltersType from '../types/FiltersType';
 
 
 type GetQueryProps = {
-  searchState?: SearchState
-  languageFilter: any
+  searchState?: SearchState;
+  languageFilter: any;
+  componentValue?: string;
 };
 
 const ComponentMap = {
@@ -19,55 +20,74 @@ const ComponentMap = {
   [SearchComponents.TYPE]: `${IndexFields.FIELD_PROJECT_TYPE_NAME}`
 };
 
-export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
-  let query: BooleanQuery = {
-    bool: {
-      must: [],
-      should: [],
-      filter: languageFilter.bool.filter
+export const getQuery = ({ searchState, languageFilter, componentValue }: GetQueryProps) => {
+
+  const weight: number = 20;
+
+  let query: any = {
+    function_score: {
+      //boost: 1,
+      query: {
+        bool: {
+          //must: [],
+          should: [],
+          filter: languageFilter.bool.filter,
+        },
+      },
+      functions: [
+        {
+          filter: { term: { content_type: "district" } },
+          weight: weight,
+        }
+      ],
+      boost_mode: "sum",
+      min_score: 0
     },
-  };
+  }
 
   Object.keys(ComponentMap).forEach((key: string) => {
     const state = searchState?.[key] || null;
 
     if (state && state.value) {
+      query.function_score.min_score = Number(weight + 1);
+
       if (typeof state.value === 'string') {
-        query.bool.should = [
-          { wildcard: { [IndexFields.TITLE]: { value: `*${state.value.toLowerCase()}*` }}},
-          { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: `*${state.value.toLowerCase()}*` }}},
-          { wildcard: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: `*${state.value.toLowerCase()}*` }}},
-          { wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*` }}},
-          { wildcard: { [IndexFields.FIELD_PROJECT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*` }}},
+        query.function_score.query.bool.should = [
+          { wildcard: { [IndexFields.TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 50 }}},
+          { wildcard: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
+          { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
+          { wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
+          { wildcard: { [IndexFields.FIELD_PROJECT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
         ];
       }
       else if (key === SearchComponents.DISTRICTS) {
         const terms: object[] = [];
         state.value.forEach((value: string) => {
-          terms.push({ term: { [IndexFields.TITLE]: value }});
-          terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: value }});
-          terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: value }});
+          terms.push({ term: { [IndexFields.TITLE]: { value: value, boost: 150 }}});
+          terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: 150 }}});
+          terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: value, boost: 150 }}});
         });
 
-        query.bool.should.push(...terms);
+        query.function_score.query.bool.should.push(...terms);
       }
       else {
         state.value.forEach((value: string) => {          
-          query.bool.must.push({
+          query.function_score.query.bool.should.push({
             term: {
-              [ComponentMap[key]]: value,
+              [ComponentMap[key]]: { value: value, boost: 2000 }
             }
           })
         });
+
+        query.function_score.functions[0].filter.term.content_type = "project";
       }
     }
   });
 
-  query.bool.minimum_should_match = Number(query.bool.should.length > 0);
-
   return {
     query: query,
-    value: Number(searchState?.submit?.value) + 1 || 0
+    // add Submit component value by default.
+    value: componentValue ? componentValue : Number(searchState?.submit?.value) + 1 || 0
   };
 }
 

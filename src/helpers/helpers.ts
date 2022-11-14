@@ -12,7 +12,7 @@ type GetQueryProps = {
   componentValue?: string;
 };
 
-const ComponentMap = {
+export const ComponentMap = {
   [SearchComponents.TITLE]: `${IndexFields.TITLE}`,
   [SearchComponents.DISTRICTS]: `${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}`,
   [SearchComponents.THEME]: `${IndexFields.FIELD_PROJECT_THEME_NAME}`,
@@ -21,15 +21,12 @@ const ComponentMap = {
 };
 
 export const getQuery = ({ searchState, languageFilter, componentValue }: GetQueryProps) => {
-
   const weight: number = 20;
 
-  let query: any = {
+  let query: BooleanQuery = {
     function_score: {
-      //boost: 1,
       query: {
         bool: {
-          //must: [],
           should: [],
           filter: languageFilter.bool.filter,
         },

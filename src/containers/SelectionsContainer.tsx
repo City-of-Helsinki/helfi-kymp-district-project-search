@@ -18,8 +18,8 @@ const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: S
   const [submitButtonValue, setSubmitButtonValue] = useState<Number>(0);
   const [filters, setFilters] = useState<FiltersType>();
 
-  // Check if searchState is changed by submit button.
   useEffect(() => {
+    // Check if searchState is changed by submit button.
     if (searchState?.submit?.value && Number(searchState?.submit?.value) !== submitButtonValue) {
       setSubmitButtonValue(Number(searchState.submit.value));
     }
@@ -35,7 +35,6 @@ const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: S
   }
 
   const transformedFilters: any = [];
-  const { t } = Drupal;
 
   for (const [key, options] of Object.entries(filters)) {
     options.forEach((option: OptionType) => {

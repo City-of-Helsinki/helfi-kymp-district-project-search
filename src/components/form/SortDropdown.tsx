@@ -5,7 +5,7 @@ import type { SelectProps } from 'hds-react';
 import type OptionType from '../../types/OptionType';
 import type SearchState from '../../types/SearchState';
 import SortOptions from '../../enum/SortOptions';
-
+import { ComponentMap } from '../../helpers/helpers';
 
 type SortDropdownProps = Omit<
   SelectProps<OptionType>,
@@ -47,14 +47,26 @@ export const SortDropdown = ({
     }
   }, [value, setQuery]);
 
-  // Check if searchState is changed by submit button.
   useEffect(() => {
+    // Check if searchState is changed by submit button.
     if (searchState?.submit?.value && Number(searchState?.submit?.value) !== submitButtonValue) {
       setSubmitButtonValue(Number(searchState.submit.value));
 
-      // TODO: check if filters have values before setting
-      setValue(SortOptions[0]);
-      setSort(SortOptions[0]);
+      let update = false;
+      Object.keys(ComponentMap).forEach((key: string) => {
+        if (searchState[key].value != null) {
+          update = true;
+        }
+      });
+
+      if (update) {
+        setValue(SortOptions[0]);
+        setSort(SortOptions[0]);
+      }
+      else {
+        setValue(SortOptions[1]);
+        setSort(SortOptions[1]);
+      }
     }
   }, [searchState]);
 

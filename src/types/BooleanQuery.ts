@@ -1,18 +1,39 @@
 type TermQuery = {
   wildcard?: {
-    [key: string]: { value: string; };
+    [key: string]: { 
+      value: string;
+      boost: number;
+    };
   };
   term?: {
-    [key: string]: string;
+    [key: string]: { 
+      value: string;
+      boost: number;
+    };
   };
 };
 
-// TODO: update this.
 type BooleanQuery = {
-  bool: {
-    should: TermQuery[];
-    filter?: TermQuery[];
-  };
+  function_score: {
+    query: {
+      bool: {
+        should: TermQuery[];
+        filter?: TermQuery[];
+      };
+    };
+    functions: [
+      {
+        filter: {
+          term: {
+            content_type: string;
+          }
+        };
+        weight: number;
+      }
+    ];
+    boost_mode: string;
+    min_score: number;
+  }
 };
 
 export default BooleanQuery;

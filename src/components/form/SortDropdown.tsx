@@ -68,7 +68,7 @@ export const SortDropdown = ({
         setSort(SortOptions[1]);
       }
     }
-  }, [searchState]);
+  }, [searchState, setSubmitButtonValue, setSort, submitButtonValue]);
 
   return (
     <div className="district-project-search-form__filter">
@@ -80,6 +80,7 @@ export const SortDropdown = ({
           setValue(selectedValue);
           setSort(selectedValue);
         }}
+        style={{ minWidth: '280px' }}
       />
     </div>
   );

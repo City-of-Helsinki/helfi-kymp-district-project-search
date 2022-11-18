@@ -9,7 +9,6 @@ import type FiltersType from '../types/FiltersType';
 type GetQueryProps = {
   searchState?: SearchState;
   languageFilter: any;
-  componentValue?: string;
 };
 
 export const ComponentMap = {
@@ -20,7 +19,7 @@ export const ComponentMap = {
   [SearchComponents.TYPE]: `${IndexFields.FIELD_PROJECT_TYPE_NAME}`
 };
 
-export const getQuery = ({ searchState, languageFilter, componentValue }: GetQueryProps) => {
+export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
   const weight: number = 20;
 
   let query: BooleanQuery = {
@@ -45,7 +44,7 @@ export const getQuery = ({ searchState, languageFilter, componentValue }: GetQue
   Object.keys(ComponentMap).forEach((key: string) => {
     const state = searchState?.[key] || null;
 
-    if (state && state.value) {
+    if (state && state.value && state.value.length) {
       query.function_score.min_score = Number(weight + 1);
 
       if (typeof state.value === 'string') {
@@ -84,7 +83,7 @@ export const getQuery = ({ searchState, languageFilter, componentValue }: GetQue
   return {
     query: query,
     // add Submit component value by default.
-    value: componentValue ? componentValue : Number(searchState?.submit?.value) + 1 || 0
+    value: Number(searchState?.submit?.value) + 1 || 0
   };
 }
 

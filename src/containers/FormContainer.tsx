@@ -74,7 +74,7 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
       themeRef.current.setQuery({ query: null });
       phaseRef.current.setQuery({ query: null });
       typeRef.current.setQuery({ query: null });
-      submitButton.current.setQuery({ query: null });
+      submitButton.current.setQuery({ query: null, value: Number(searchState?.submit?.value) + 1 || 0 });
     }
   };
 

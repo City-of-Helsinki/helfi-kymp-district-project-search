@@ -52,13 +52,8 @@ export const SortDropdown = ({
     if (searchState?.submit?.value && Number(searchState?.submit?.value) !== submitButtonValue) {
       setSubmitButtonValue(Number(searchState.submit.value));
 
-      let update = false;
-      Object.keys(ComponentMap).forEach((key: string) => {
-        if (searchState[key].value != null) {
-          update = true;
-        }
-      });
-
+      // Update sorting based on filters.
+      const update = Object.keys(ComponentMap).find((key: string)=> searchState[key].value !== null)
       if (update) {
         setValue(SortOptions[0]);
         setSort(SortOptions[0]);

@@ -60,7 +60,7 @@ export const Dropdown = ({
     } else {
       setQuery({ value: value.map((option: OptionType) => option.value) });
     }
-  }, [value, setQuery]);
+  }, [value]);
 
   useEffect(() => {
     setValue(getDropdownValues(searchState, componentId, options))
@@ -72,6 +72,7 @@ export const Dropdown = ({
         clearButtonAriaLabel={clearButtonAriaLabel}
         label={label}
         icon={icon}
+        // @ts-ignore
         options={options}
         onChange={(values: OptionType[]) => {
          let uniqueValues = values.filter((val, index, array) => array.findIndex(t => t.value === val.value) === index);

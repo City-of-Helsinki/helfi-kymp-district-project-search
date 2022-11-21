@@ -29,7 +29,7 @@ const getAggregations = (searchStateValues: any, componentId: string) => {
   return !searchStateValues?.[componentId]?.aggregations ? [] : searchStateValues[componentId].aggregations;
 };
 
-const getDropdownValues = (searchStateValue: any, componentId: string, options: OptionType[]): OptionType[]=> {
+const getDropdownValues = (searchStateValue: any, componentId: string, options: OptionType[]): OptionType[] => {
   if (!searchStateValue?.[componentId]?.value) {
     return [];
   }
@@ -60,7 +60,7 @@ export const Dropdown = ({
     } else {
       setQuery({ value: value.map((option: OptionType) => option.value) });
     }
-  }, [value, setQuery]);
+  }, [value]);
 
   useEffect(() => {
     setValue(getDropdownValues(searchState, componentId, options))
@@ -72,6 +72,7 @@ export const Dropdown = ({
         clearButtonAriaLabel={clearButtonAriaLabel}
         label={label}
         icon={icon}
+        // @ts-ignore
         options={options}
         onChange={(values: OptionType[]) => {
          let uniqueValues = values.filter((val, index, array) => array.findIndex(t => t.value === val.value) === index);

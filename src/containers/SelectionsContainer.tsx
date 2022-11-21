@@ -18,10 +18,10 @@ const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: S
   const [submitButtonValue, setSubmitButtonValue] = useState<Number>(0);
   const [filters, setFilters] = useState<FiltersType>();
 
-  // Check if searchState is changed by submit button.
   useEffect(() => {
-    if (Number(searchState?.submit?.value) !== submitButtonValue) {
-      setSubmitButtonValue(Number(searchState?.submit?.value) || 0);
+    // Check if searchState is changed by submit button.
+    if (searchState?.submit?.value && Number(searchState?.submit?.value) !== submitButtonValue) {
+      setSubmitButtonValue(Number(searchState.submit.value));
     }
   }, [searchState]);
 
@@ -46,7 +46,7 @@ const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: S
           key={option.value}
         >
           <Button
-            aria-label={Drupal.t(
+            aria-label={t(
               'Remove @item from search results',
               { '@item': option.value },
               { context: 'Search: remove item aria label' }

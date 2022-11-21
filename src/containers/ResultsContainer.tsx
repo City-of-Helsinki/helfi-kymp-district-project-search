@@ -1,7 +1,8 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { ReactiveList } from '@appbaseio/reactivesearch';
 
 import SearchComponents from '../enum/SearchComponents';
+import SortOptions from '../enum/SortOptions';
 import Result from '../types/Result';
 import Pagination from '../components/results/Pagination';
 import ResultCard from '../components/results/ResultCard';
@@ -15,7 +16,21 @@ const ResultsContainer = (): JSX.Element => {
   const dimensions = useWindowDimensions();
   const resultsWrapper = useRef<HTMLDivElement | null>(null);
   const pages = dimensions.isMobile ? 3 : 5;
+  const [sort, setSort] = useState(SortOptions[1]);
 
+  const sorting: any = {
+    'most_relevant': {
+      _score: { order: "desc" },
+      title: { order: "asc" }
+    },
+    'a_o': {
+      title: { order: "asc" },
+    },
+    'o_a': {
+      title: { order: "desc" },
+    },
+  };
+  
   const onPageChange = () => {
     if (!resultsWrapper.current) {
       return;
@@ -28,7 +43,7 @@ const ResultsContainer = (): JSX.Element => {
 
   return (
     <div ref={resultsWrapper}>
-      <ResultsHeading />
+      <ResultsHeading setSort={setSort} />
       <ReactiveList
         className="district-project-search__container"
         componentId={SearchComponents.RESULTS}
@@ -38,12 +53,14 @@ const ResultsContainer = (): JSX.Element => {
         pagination={true}
         showResultStats={false}
         size={10}
-        // sortBy={sort}
         URLParams={true}
         defaultQuery={() => ({
           query: {
             ...resultListFilter,
           },
+          sort: [
+            sorting[sort.value]
+          ]
         })}
         react={{
           and: [SearchComponents.FILTER_BULLETS, SearchComponents.SUBMIT]
@@ -51,10 +68,10 @@ const ResultsContainer = (): JSX.Element => {
         render={({ data }: any) => {
           return (
             <ul className="district-project-search__listing">
-            {data.map((item: Result) => (
-              <ResultCard key={item._id} {...item} />
-            ))}
-          </ul>
+              {data.map((item: Result) => (
+                <ResultCard key={item._id} {...item} />
+              ))}
+            </ul>
           )
         }}
         renderNoResults={() => (

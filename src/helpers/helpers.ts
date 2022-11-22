@@ -41,10 +41,10 @@ export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
     },
   }
 
-  const isProjectFilterSet = Object.keys(ComponentMap).filter((item: any) => item !== 'title' && item !== 'districts')
+  const isProjectFilterSet = Object.keys(ComponentMap).filter((item: string) => item !== 'title' && item !== 'districts')
     .find((key: string) => searchState?.[key]?.value !== null)
 
-  const isDistrictFilterSet = Object.keys(ComponentMap).filter((item: any) => item === 'districts')
+  const isDistrictFilterSet = Object.keys(ComponentMap).filter((item: string) => item === 'districts')
     .find((key: string) => searchState?.[key]?.value !== null)
 
   Object.keys(ComponentMap).forEach((key: string) => {

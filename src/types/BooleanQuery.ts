@@ -8,7 +8,7 @@ type TermQuery = {
   term?: {
     [key: string]: { 
       value: string;
-      boost: number;
+      boost?: number;
     };
   };
 };

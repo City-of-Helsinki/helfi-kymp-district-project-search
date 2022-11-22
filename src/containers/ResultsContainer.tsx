@@ -16,7 +16,7 @@ const ResultsContainer = (): JSX.Element => {
   const dimensions = useWindowDimensions();
   const resultsWrapper = useRef<HTMLDivElement | null>(null);
   const pages = dimensions.isMobile ? 3 : 5;
-  const [sort, setSort] = useState(SortOptions[1]);
+  const [sort, setSort] = useState(SortOptions[0]);
 
   const sorting: any = {
     'most_relevant': {

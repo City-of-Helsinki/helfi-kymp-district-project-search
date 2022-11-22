@@ -22,11 +22,11 @@ type SortDropdownProps = Omit<
 
 const getSortValue = (searchStateValue: any, componentId: string, options: OptionType[]): OptionType => {
   if (!searchStateValue?.[componentId]?.value) {
-    return options[1];
+    return options[0];
   }
 
   const selectedOption = options.find(item => searchStateValue[componentId].value.includes(item.value));
-  return selectedOption !== undefined ? selectedOption : options[1];
+  return selectedOption !== undefined ? selectedOption : options[0];
 };
 
 export const SortDropdown = ({
@@ -53,8 +53,8 @@ export const SortDropdown = ({
       setSubmitButtonValue(Number(searchState.submit.value));
 
       // Update sorting based on filters.
-      const update = Object.keys(ComponentMap).find((key: string)=> searchState[key].value !== null)
-      if (update) {
+      const isFilterSet = Object.keys(ComponentMap).find((key: string) => searchState[key].value !== null);
+      if (isFilterSet) {
         setValue(SortOptions[0]);
         setSort(SortOptions[0]);
       }

@@ -37,15 +37,25 @@ export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
         }
       ],
       boost_mode: "sum",
-      min_score: 0
+      min_score: 0,
     },
   }
+
+  const isProjectFilterSet = Object.keys(ComponentMap).filter((item: any) => item !== 'title' && item !== 'districts')
+    .find((key: string) => searchState?.[key]?.value !== null)
+
+  const isDistrictFilterSet = Object.keys(ComponentMap).filter((item: any) => item === 'districts')
+    .find((key: string) => searchState?.[key]?.value !== null)
 
   Object.keys(ComponentMap).forEach((key: string) => {
     const state = searchState?.[key] || null;
 
     if (state && state.value && state.value.length) {
       query.function_score.min_score = Number(weight + 1);
+
+      if (isProjectFilterSet && isDistrictFilterSet) {
+        query.function_score.min_score = Number(50);
+      }
 
       if (typeof state.value === 'string') {
         query.function_score.query.bool.should = [
@@ -58,9 +68,17 @@ export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
       }
       else if (key === SearchComponents.DISTRICTS) {
         const terms: object[] = [];
+
         state.value.forEach((value: string) => {
           terms.push({ term: { [IndexFields.TITLE]: { value: value, boost: 150 }}});
-          terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: 150 }}});
+
+          // if project filter is also set, boost projects.
+          if (isProjectFilterSet) {
+            terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: 3000 }}});
+          }
+          else {
+            terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: 150 }}});
+          }
           terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: value, boost: 150 }}});
         });
 
@@ -70,12 +88,10 @@ export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
         state.value.forEach((value: string) => {          
           query.function_score.query.bool.should.push({
             term: {
-              [ComponentMap[key]]: { value: value, boost: 2000 }
+              [ComponentMap[key]]: { value: value, boost: 70 }
             }
           })
         });
-
-        query.function_score.functions[0].filter.term.content_type = "project";
       }
     }
   });

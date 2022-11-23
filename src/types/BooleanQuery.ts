@@ -31,6 +31,7 @@ type BooleanQuery = {
         weight: number;
       }
     ];
+    score_mode: string;
     boost_mode: string;
     min_score: number;
   }

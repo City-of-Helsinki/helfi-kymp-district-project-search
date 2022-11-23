@@ -42,26 +42,22 @@ export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
   }
 
   const isProjectFilterSet = Object.keys(ComponentMap).filter((item: string) => item !== 'title' && item !== 'districts')
-    .find((key: string) => searchState?.[key]?.value !== null)
-
-  const isDistrictFilterSet = Object.keys(ComponentMap).filter((item: string) => item === 'districts')
-    .find((key: string) => searchState?.[key]?.value !== null)
+    .find((key: string) => searchState?.[key]?.value?.length);
+  const isDistrictFilterSet = searchState?.['districts']?.value?.length;
+  const isTitleFilterSet = searchState?.['title']?.value?.length;
 
   Object.keys(ComponentMap).forEach((key: string) => {
     const state = searchState?.[key] || null;
 
     if (state && state.value && state.value.length) {
-      query.function_score.min_score = Number(weight + 1);
-
-      if (isProjectFilterSet && isDistrictFilterSet) {
-        query.function_score.min_score = Number(50);
-      }
+      query.function_score.min_score = (isProjectFilterSet && isDistrictFilterSet) || (isProjectFilterSet && isTitleFilterSet) ?  Number(50) : Number(weight + 1);
 
       if (typeof state.value === 'string') {
         query.function_score.query.bool.should = [
           { wildcard: { [IndexFields.TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 50 }}},
           { wildcard: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
-          { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
+          // if project filter is also set, boost projects.
+          { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: isProjectFilterSet ? 50 : 22 }}},
           { wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
           { wildcard: { [IndexFields.FIELD_PROJECT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
         ];
@@ -71,14 +67,8 @@ export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
 
         state.value.forEach((value: string) => {
           terms.push({ term: { [IndexFields.TITLE]: { value: value, boost: 150 }}});
-
           // if project filter is also set, boost projects.
-          if (isProjectFilterSet) {
-            terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: 3000 }}});
-          }
-          else {
-            terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: 150 }}});
-          }
+          terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: isProjectFilterSet ? 3000 : 150 }}});
           terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: value, boost: 150 }}});
         });
 

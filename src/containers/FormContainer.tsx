@@ -9,7 +9,7 @@ import SubmitButton from '../components/form/SubmitButton';
 import IndexFields from '../enum/IndexFields';
 import useLanguageQuery from '../hooks/useLanguageQuery';
 import type OptionType from '../types/OptionType';
-import { getQuery } from '../helpers/helpers';
+import getQuery from '../helpers/GetQuery';
 
 
 type FormContainerProps = {

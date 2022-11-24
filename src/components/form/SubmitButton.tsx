@@ -2,34 +2,48 @@ import { Button } from 'hds-react';
 import { useEffect, useState } from 'react';
 
 import { useLanguageQuery } from '../../hooks/useLanguageQuery';
-import { getQuery } from '../../helpers/helpers';
+import getQuery from '../../helpers/GetQuery';
+import stateToParams from '../../helpers/Params';
+import useSearchParams from '../../hooks/useSearchParams';
 import type SearchState from '../../types/SearchState';
 
 
-type Props = {
+type SubmitButtonProps = {
+  initialized: boolean;
   searchState: SearchState;
   setQuery: Function;
 };
 
-export const SubmitButton = ({ searchState, setQuery }: Props) => {
+export const SubmitButton = ({ initialized, searchState, setQuery }: SubmitButtonProps) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const languageFilter = useLanguageQuery();
+  const [, updateParams] = useSearchParams();
+
+  // useEffect(() => {
+  //   if (mounted) {
+  //     return;
+  //   }
+
+  //   setQuery(getQuery({searchState, languageFilter}));
+  //   setMounted(true);
+  // }, [getQuery, setQuery, mounted, setMounted, languageFilter]);
+
 
   useEffect(() => {
-    if (mounted) {
-      return;
+    if (initialized && !mounted) {
+      setQuery(getQuery({searchState, languageFilter}));
+      setMounted(true);
     }
-
-    setQuery(getQuery({searchState, languageFilter}));
-    setMounted(true);
-  }, [getQuery, setQuery, mounted, setMounted, languageFilter]);
+  }, [getQuery, initialized, mounted, setMounted, setQuery]);
 
   return (
     <Button
       className='district-project-search-form__submit-button'
       type='submit'
+      disabled={!initialized}
       onClick={() => {
         setQuery(getQuery({searchState, languageFilter}));
+        updateParams(stateToParams(searchState));
       }}
       variant='primary'
       theme='black'

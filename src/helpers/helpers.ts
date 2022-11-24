@@ -36,32 +36,41 @@ export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
           weight: weight,
         }
       ],
+      score_mode: "sum",
       boost_mode: "sum",
-      min_score: 0
+      min_score: 0,
     },
   }
+
+  const isProjectFilterSet = Object.keys(ComponentMap).filter((item: string) => item !== 'title' && item !== 'districts')
+    .find((key: string) => searchState?.[key]?.value?.length);
+  const isDistrictFilterSet = searchState?.['districts']?.value?.length;
+  const isTitleFilterSet = searchState?.['title']?.value?.length;
 
   Object.keys(ComponentMap).forEach((key: string) => {
     const state = searchState?.[key] || null;
 
     if (state && state.value && state.value.length) {
-      query.function_score.min_score = Number(weight + 1);
+      query.function_score.min_score = (isProjectFilterSet && isDistrictFilterSet) || (isProjectFilterSet && isTitleFilterSet) ?  Number(50) : Number(weight + 1);
 
       if (typeof state.value === 'string') {
         query.function_score.query.bool.should = [
           { wildcard: { [IndexFields.TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 50 }}},
-          { wildcard: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
-          { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
+          { wildcard: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: isProjectFilterSet ? 45 : 22 }}},
+          // if project filter is also set, boost projects.
+          { wildcard: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: `*${state.value.toLowerCase()}*`, boost: isProjectFilterSet ? 1000 : 22 }}},
           { wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
           { wildcard: { [IndexFields.FIELD_PROJECT_SEARCH_METATAGS]: { value: `*${state.value.toLowerCase()}*`, boost: 22 }}},
         ];
       }
       else if (key === SearchComponents.DISTRICTS) {
         const terms: object[] = [];
+
         state.value.forEach((value: string) => {
-          terms.push({ term: { [IndexFields.TITLE]: { value: value, boost: 150 }}});
-          terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: 150 }}});
-          terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: value, boost: 150 }}});
+          terms.push({ term: { [IndexFields.TITLE]: { value: value, boost: 50 }}});
+          // if project filter is also set, boost projects.
+          terms.push({ term: { [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: { value: value, boost: isProjectFilterSet ? 3000 : 30 }}});
+          terms.push({ term: { [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: { value: value, boost: 50 }}});
         });
 
         query.function_score.query.bool.should.push(...terms);
@@ -70,12 +79,10 @@ export const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
         state.value.forEach((value: string) => {          
           query.function_score.query.bool.should.push({
             term: {
-              [ComponentMap[key]]: { value: value, boost: 2000 }
+              [ComponentMap[key]]: { value: value, boost: isProjectFilterSet ? 120 : 70 }
             }
           })
         });
-
-        query.function_score.functions[0].filter.term.content_type = "project";
       }
     }
   });

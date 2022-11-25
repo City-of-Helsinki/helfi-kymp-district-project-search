@@ -9,6 +9,7 @@ import ResultCard from '../components/results/ResultCard';
 import ResultsHeading from '../components/results/ResultsHeading';
 import useResultListQuery from '../hooks/useResultListQuery';
 import useWindowDimensions from '../hooks/useWindowDimensions';
+import IndexFields from '../enum/IndexFields';
 
 
 const ResultsContainer = (): JSX.Element => {
@@ -21,13 +22,13 @@ const ResultsContainer = (): JSX.Element => {
   const sorting: any = {
     'most_relevant': {
       _score: { order: "desc" },
-      title: { order: "asc" }
+      [`${IndexFields.TITLE}.keyword`]: { order: "asc" }
     },
     'a_o': {
-      title: { order: "asc" },
+      [`${IndexFields.TITLE}.keyword`]: { order: "asc" },
     },
     'o_a': {
-      title: { order: "desc" },
+      [`${IndexFields.TITLE}.keyword`]: { order: "desc" },
     },
   };
   

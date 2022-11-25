@@ -109,28 +109,28 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
               aggs: {
                 [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: {
                   terms: {
-                    field: IndexFields.FIELD_PROJECT_DISTRICT_TITLE,
+                    field: `${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}.keyword`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
                 [IndexFields.TITLE]: {
                   terms: {
-                    field: IndexFields.TITLE,
+                    field: `${IndexFields.TITLE}.keyword`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
                 [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: {
                   terms: {
-                    field: IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE,
+                    field: `${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE}.keyword`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
                 districts_for_filters: {
                   terms: {
-                    field: 'district_title',
+                    field: `${IndexFields.DISTRICTS_FOR_FILTERS_DISTRICT_TITLE}.keyword`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
@@ -174,14 +174,14 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
                 aggs: {
                   [IndexFields.FIELD_PROJECT_THEME_NAME]: {
                     terms: {
-                      field: IndexFields.FIELD_PROJECT_THEME_NAME,
+                      field: `${IndexFields.FIELD_PROJECT_THEME_NAME}.keyword`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
                   },
                   project_theme_taxonomy_terms: {
                     terms: {
-                      field: 'project_theme_name',
+                      field: `${IndexFields.PROJECT_THEME_NAME}.keyword`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
@@ -210,14 +210,14 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
                 aggs: {
                   [IndexFields.FIELD_PROJECT_PHASE_NAME]: {
                     terms: {
-                      field: IndexFields.FIELD_PROJECT_PHASE_NAME,
+                      field: `${IndexFields.FIELD_PROJECT_PHASE_NAME}.keyword`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
                   },
                   project_phase_taxonomy_terms: {
                     terms: {
-                      field: 'project_phase_name',
+                      field: `${IndexFields.PROJECT_PHASE_NAME}.keyword`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
@@ -246,14 +246,14 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
                 aggs: {
                   [IndexFields.FIELD_PROJECT_TYPE_NAME]: {
                     terms: {
-                      field: IndexFields.FIELD_PROJECT_TYPE_NAME,
+                      field: `${IndexFields.FIELD_PROJECT_TYPE_NAME}.keyword`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
                   },
                   project_type_taxonomy_terms: {
                     terms: {
-                      field: 'project_type_name',
+                      field: `${IndexFields.PROJECT_TYPE_NAME}.keyword`,
                       size: 500,
                       order: { _key: 'asc' }
                     }

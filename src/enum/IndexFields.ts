@@ -7,7 +7,11 @@ export const IndexFields = {
   FIELD_PROJECT_TYPE_NAME: 'field_project_type_name',
   FIELD_PROJECT_SEARCH_METATAGS: 'field_project_search_metatags',
   FIELD_DISTRICT_SEARCH_METATAGS: 'field_district_search_metatags',
-  FIELD_DISTRICT_SUBDISTRICTS_TITLE: 'field_district_subdistricts_title'
+  FIELD_DISTRICT_SUBDISTRICTS_TITLE: 'field_district_subdistricts_title',
+  DISTRICTS_FOR_FILTERS_DISTRICT_TITLE: 'district_title',
+  PROJECT_THEME_NAME: 'project_theme_name',
+  PROJECT_PHASE_NAME: 'project_phase_name',
+  PROJECT_TYPE_NAME: 'project_type_name'
 };
 
 export default IndexFields;

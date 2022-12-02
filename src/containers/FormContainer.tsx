@@ -307,7 +307,7 @@ const FormContainer = ({ initialParams, searchState, setSearchState }: FormConta
         />
         <ReactiveComponent
           componentId={SearchComponents.FILTER_BULLETS}
-          render={({ setQuery }) => {
+          render={() => {
             return (
               <SelectionsContainer
                 searchState={searchState}

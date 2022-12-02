@@ -31,7 +31,7 @@ const getAggregations = (searchStateValues: any, componentId: string) => {
   return !searchStateValues?.[componentId]?.aggregations ? [] : searchStateValues[componentId].aggregations;
 };
 
-const getDropdownValues = (searchStateValue: any, componentId: string, options: OptionType[]): OptionType[] => {  
+const getDropdownValues = (searchStateValue: any, componentId: string, options: OptionType[]): OptionType[] => {
   if (!searchStateValue?.[componentId]?.value) {
     return [];
   }

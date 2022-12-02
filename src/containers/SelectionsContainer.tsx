@@ -1,80 +1,69 @@
 import { Button, IconCross } from 'hds-react';
-import { MouseEventHandler, useState, useEffect } from 'react';
+import { ReactElement, memo } from 'react';
 
 import type OptionType from '../types/OptionType';
-import type SearchState from '../types/SearchState';
-import type FiltersType from '../types/FiltersType';
-import { capitalize, transformSearchState } from '../helpers/helpers';
+
+import { capitalize } from '../helpers/helpers';
+import { clearParams } from '../helpers/Params';
+
 import SearchComponents from '../enum/SearchComponents';
 
 type SelectionsContainerProps = {
-  searchState: SearchState;
-  setQuery: Function;
+  searchState: any;
+  setSearchState: Function;
   clearSelection: Function;
-  clearSelections: MouseEventHandler<HTMLButtonElement>;
 };
 
-const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: SelectionsContainerProps) => {
-  const [submitButtonValue, setSubmitButtonValue] = useState<Number>(0);
-  const [filters, setFilters] = useState<FiltersType>();
+const SelectionsContainer = ({ searchState, setSearchState, clearSelection }: SelectionsContainerProps) => {
+  const clearSelections = () => {
+    setSearchState({});
+    clearParams();
+  };
 
-  useEffect(() => {
-    // Check if searchState is changed by submit button.
-    if (searchState?.submit?.value && Number(searchState?.submit?.value) !== submitButtonValue) {
-      setSubmitButtonValue(Number(searchState.submit.value));
-    }
-  }, [searchState]);
+  const filters: ReactElement<HTMLLIElement>[] = [];
 
-  // Update filter bullets when submit button is pressed.
-  useEffect(() => {
-    setFilters(transformSearchState(searchState, [SearchComponents.DISTRICTS, SearchComponents.THEME, SearchComponents.TYPE, SearchComponents.PHASE]));
-  }, [submitButtonValue]);
-
-  if (!filters?.districts && !filters?.project_theme && !filters?.project_phase && !filters?.project_type) {
-    return null;
-  }
-
-  const transformedFilters: any = [];
-  const { t } = Drupal;
-
-  for (const [key, options] of Object.entries(filters)) {
-    options.forEach((option: OptionType) => {
-      transformedFilters.push(
-        <li
-          className='content-tags__tags__tag content-tags__tags--interactive'
-          onClick={() => clearSelection(option, key)}
-          key={option.value}
-        >
-          <Button
-            aria-label={t(
-              'Remove @item from search results',
-              { '@item': option.value },
-              { context: 'Search: remove item aria label' }
-            )}
-            className='district-project-search-form__remove-selection-button'
-            iconRight={<IconCross />}
-            variant='supplementary'
+  [SearchComponents.DISTRICTS, SearchComponents.THEME, SearchComponents.PHASE, SearchComponents.TYPE].forEach((key) => {
+    if (searchState[key]?.value?.length) {
+      searchState[key].value.forEach((value: OptionType) =>
+        filters.push(
+          <li
+            className='content-tags__tags__tag content-tags__tags--interactive'
+            key={`${key}-${value.value}`}
+            onClick={() => clearSelection(value, key)}
           >
-            {capitalize(option.value)}
-          </Button>
-        </li>
+            <Button
+              aria-label={Drupal.t(
+                'Remove @item from search results',
+                { '@item': value.value },
+                { context: 'Search: remove item aria label' }
+              )}
+              className='district-project-search-form__remove-selection-button'
+              iconRight={<IconCross />}
+              variant='supplementary'
+            >
+              {capitalize(value.value)}
+            </Button>
+          </li>
+        )
       );
-    });
-  }
+    }
+  });
 
-  if (!transformedFilters || transformedFilters.length <= 0) {
+  if (!filters.length) {
     return null;
   }
 
   return (
     <div className='district-project-search-form__selections-wrapper'>
       <ul className='district-project-search-form__selections-container content-tags__tags'>
-        {transformedFilters || []}
+        {filters}
         <li className='district-project-search-form__clear-all'>
           <Button
+            aria-hidden={filters.length ? 'true' : 'false'}
             className='district-project-search-form__clear-all-button'
             iconLeft={<IconCross className='district-project-search-form__clear-all-icon' />}
             onClick={clearSelections}
+            style={filters.length ? {} : { visibility: 'hidden' }}
             variant='supplementary'
           >
             {Drupal.t('Clear selections', {}, { context: 'District and project search' })}
@@ -85,4 +74,12 @@ const SelectionsContainer = ({ searchState, clearSelection, clearSelections }: S
   );
 };
 
-export default SelectionsContainer;
+const updateSelections = (prev: SelectionsContainerProps, next: SelectionsContainerProps) => {
+  if (prev.searchState[SearchComponents.SUBMIT]?.value === next.searchState[SearchComponents.SUBMIT]?.value) {
+    return true;
+  }
+
+  return false;
+};
+
+export default memo(SelectionsContainer, updateSelections);

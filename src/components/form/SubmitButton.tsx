@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react';
 
 import { useLanguageQuery } from '../../hooks/useLanguageQuery';
 import getQuery from '../../helpers/GetQuery';
-import stateToParams from '../../helpers/Params';
-import useSearchParams from '../../hooks/useSearchParams';
 import type SearchState from '../../types/SearchState';
-
+import { setParams } from '../../helpers/Params';
 
 type SubmitButtonProps = {
   initialized: boolean;
@@ -17,17 +15,6 @@ type SubmitButtonProps = {
 export const SubmitButton = ({ initialized, searchState, setQuery }: SubmitButtonProps) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const languageFilter = useLanguageQuery();
-  const [, updateParams] = useSearchParams();
-
-  // useEffect(() => {
-  //   if (mounted) {
-  //     return;
-  //   }
-
-  //   setQuery(getQuery({searchState, languageFilter}));
-  //   setMounted(true);
-  // }, [getQuery, setQuery, mounted, setMounted, languageFilter]);
-
 
   useEffect(() => {
     if (initialized && !mounted) {
@@ -43,7 +30,7 @@ export const SubmitButton = ({ initialized, searchState, setQuery }: SubmitButto
       disabled={!initialized}
       onClick={() => {
         setQuery(getQuery({searchState, languageFilter}));
-        updateParams(stateToParams(searchState));
+        setParams(searchState);
       }}
       variant='primary'
       theme='black'

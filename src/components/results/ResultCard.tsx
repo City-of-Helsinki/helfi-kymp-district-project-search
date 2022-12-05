@@ -1,6 +1,9 @@
+import { format } from 'date-fns';
 import Result from '../../types/Result';
-import MetadataItem from './MetadataItem';
+import Card from '../common/Card';
 import { capitalize } from '../../helpers/helpers';
+import TagType from '../../types/TagType';
+import MetadataType from '../../types/MetadataType';
 
 const ResultCard = ({
   content_type,
@@ -17,63 +20,112 @@ const ResultCard = ({
   field_project_theme_name,
   field_district_subdistricts_title
 }: Result) => {
-  const articleClass = content_type[0] === 'project' ? 'project-teaser node--type-project' : 'district-teaser node--type-district';
-  const tagBgColor = content_type[0] === 'project' ? 'content-tags__tags__tag--gold' : 'content-tags__tags__tag--coat-of-arms';
-  const linkIconClass = field_project_external_website ? 'hel-icon--link-external' : 'hel-icon--arrow-right';
   const linkUrl = field_project_external_website ? field_project_external_website[0] : `${url}`;
   let imageUrl = project_image_absolute_url ? project_image_absolute_url[0] : ''
   imageUrl = district_image_absolute_url ? district_image_absolute_url[0] : imageUrl
   let imageAlt = field_project_image_alt ? field_project_image_alt[0] : ''
   imageAlt = field_district_image_alt ? field_district_image_alt[0] : imageAlt
 
+  if (imageAlt == '""') {
+    imageAlt = '';
+  }
+
+  const cardImage = imageUrl ? (
+    <img src={imageUrl} alt={imageAlt} loading="lazy" typeof="foaf:Image" />
+  ) : (
+    <div className="image-placeholder">
+      <span className="hel-icon hel-icon--home-smoke"></span>
+    </div>
+  );
+
+  const isProject = content_type[0] === 'project';
+  const cardModifierClass = isProject ? 'card--project' : 'card--district';
+  const cardCategoryTag: TagType = {
+    tag: isProject ?
+      Drupal.t('Project', {}, { context: 'District and project search' })
+      :
+      Drupal.t('District', {}, { context: 'District and project search' }),
+    color: isProject ? 'gold' : 'coat-of-arms',
+  }
+
+
+  const getVisibleTime = (dateString: number): string => {
+    return format(new Date(dateString), 'M/Y');
+  };
+
+  const getHtmlTime = (dateString: number): string => {
+    const published = new Date(dateString);
+    return `${format(published, 'Y-MM-dd')}T${format(published, 'HH:mm')}Z`;
+  };
+
+  const getTimeItem = (dateStrings: any): JSX.Element => (
+    dateStrings.map((dateString: number, i: number) => (
+      <time dateTime={getHtmlTime(dateString)} key={`${dateString}-${i}`}> {i !== 0 && "-"} {getVisibleTime(dateString)}</time>
+    ))
+  );
+
+  const metas:Array<MetadataType> = [];
+
+  if (project_plan_schedule || project_execution_schedule) {
+    const schedule: any = (
+      <>
+        { project_plan_schedule &&
+          <span className="metadata__item--schedule metadata__item--schedule--plan-schedule">
+            {Drupal.t('planning')}
+            {getTimeItem(project_plan_schedule)}
+          </span>
+        }
+        {project_plan_schedule && project_execution_schedule && ' ' }
+        {project_execution_schedule &&
+          <span className="metadata__item--schedule">
+            {Drupal.t('execution')}
+            {getTimeItem(project_execution_schedule)}
+          </span>
+        }
+      </>
+    );
+    metas.push({
+      icon: 'calendar',
+      label: Drupal.t('Estimated schedule'),
+      content: schedule,
+    });
+  }
+
+  if (field_project_district_title) {
+    metas.push({
+      icon: 'location',
+      label: Drupal.t('Location'),
+      content: field_project_district_title.map((item) => capitalize(item)).join(', '),
+    })
+  }
+
+  if (field_district_subdistricts_title) {
+    metas.push({
+      icon: 'location',
+      label: Drupal.t('Districts'),
+      content: field_district_subdistricts_title,
+    })
+  }
+
+  if (field_project_theme_name) {
+    metas.push({
+      icon: 'locate',
+      label: Drupal.t('Theme'),
+      content: field_project_theme_name,
+    })
+  }
+
   return (
-    <article about={url[0]} className={articleClass}>
-      <div className={`${content_type[0]}-teaser__image`}>
-        { imageUrl ? (
-          <img src={`${imageUrl}`} alt={imageAlt} loading="lazy" typeof="foaf:Image" />
-        ) : (
-        <div className="image-placeholder">
-          <span className="hel-icon hel-icon--home-smoke"></span>
-        </div>
-        )}
-      </div>
-
-      <div className={`${content_type[0]}-teaser__data`}>
-        <section className="content-tags" aria-label={Drupal.t('Tags')}>
-          <ul className="content-tags__tags content-tags__tags--static">
-            <li className={`content-tags__tags__tag ${tagBgColor}`}>
-              { content_type[0] === 'district' && <span>{Drupal.t('District', {}, { context: 'District and project search' })}</span> }
-              { content_type[0] === 'project' && <span>{Drupal.t('Project', {}, { context: 'District and project search' })}</span> }
-            </li>
-          </ul>
-        </section>
-
-        <a href={linkUrl} className={`${content_type[0]}-teaser__link`} {...field_project_external_website && {'data-is-external' : 'true'}} rel="bookmark">
-          <h3 className="content-card__title"><span>{capitalize(title[0])}</span></h3>
-          {field_project_external_website && 
-            <span className="link__type link__type--external" aria-label={`(${Drupal.t('Link leads to external service')})`}></span>
-          }
-        </a>
-
-        { project_plan_schedule || project_execution_schedule ? 
-          <MetadataItem icon="calendar" label={Drupal.t('Estimated schedule')} projectPlanSchedule={project_plan_schedule} projectExecutionSchedule={project_execution_schedule} />
-        :
-          null
-        }
-
-        {field_project_district_title && 
-          <MetadataItem icon="location" label={Drupal.t('Location')} items={field_project_district_title} />
-        }
-        {field_district_subdistricts_title && 
-          <MetadataItem icon="location" label={Drupal.t('Districts')} items={field_district_subdistricts_title} />
-        }
-        {field_project_theme_name && 
-          <MetadataItem icon="locate" label={Drupal.t('Theme')} items={field_project_theme_name} />
-        }
-        
-        <span className={`hel-icon ${linkIconClass}`} aria-hidden="true"></span>
-      </div>
-    </article>
+    <Card
+      cardAbout={'test'}
+      cardModifierClass={cardModifierClass}
+      cardImage={cardImage}
+      cardTitle={capitalize(title[0])}
+      cardUrl={ linkUrl }
+      cardUrlExternal={ !!field_project_external_website }
+      cardCategoryTag={cardCategoryTag}
+      cardMetas={ metas }
+    />
   );
 };
 

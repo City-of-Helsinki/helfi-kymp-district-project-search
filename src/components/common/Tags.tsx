@@ -1,7 +1,6 @@
 import TagType from '../../types/TagType';
 
-interface TagsProps
-{
+interface TagsProps {
   tags: Array<TagType>;
   isInteractive?: boolean;
 };
@@ -12,10 +11,7 @@ export const Tags = (props: TagsProps): JSX.Element => {
     isInteractive,
   } = props;
 
-  const typeClass = isInteractive ?
-    'content-tags__tags--interactive'
-    :
-    'content-tags__tags--static';
+  const typeClass = isInteractive ? 'content-tags__tags--interactive' : 'content-tags__tags--static';
 
   return (
     <section
@@ -24,7 +20,7 @@ export const Tags = (props: TagsProps): JSX.Element => {
         Drupal.t('Tags', {}, { context: 'Label for screen reader software users explaining that this is a list of tags related to this page.' })
       }>
       <ul className={`content-tags__tags ${typeClass}`}>
-        {tags.map((item:any, key:number) =>
+        {tags.map((item:TagType, key:number) =>
         {
           return (
             <li key={ key } className={`content-tags__tags__tag ${ item.color ? `content-tags__tags__tag--${item.color}` : '' }`}>

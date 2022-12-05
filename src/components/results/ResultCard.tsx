@@ -26,7 +26,7 @@ const ResultCard = ({
   let imageAlt = field_project_image_alt ? field_project_image_alt[0] : ''
   imageAlt = field_district_image_alt ? field_district_image_alt[0] : imageAlt
 
-  if (imageAlt == '""') {
+  if (imageAlt === '""') {
     imageAlt = '';
   }
 
@@ -64,10 +64,10 @@ const ResultCard = ({
     ))
   );
 
-  const metas:Array<MetadataType> = [];
+  const metas: Array<MetadataType> = [];
 
   if (project_plan_schedule || project_execution_schedule) {
-    const schedule: any = (
+    const schedule: JSX.Element|string|Array<string> = (
       <>
         { project_plan_schedule &&
           <span className="metadata__item--schedule metadata__item--schedule--plan-schedule">
@@ -117,7 +117,6 @@ const ResultCard = ({
 
   return (
     <Card
-      cardAbout={'test'}
       cardModifierClass={cardModifierClass}
       cardImage={cardImage}
       cardTitle={capitalize(title[0])}

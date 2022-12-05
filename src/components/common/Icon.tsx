@@ -1,5 +1,4 @@
-interface IconProps
-{
+interface IconProps {
   icon: string;
   className?: string;
   label?: string;

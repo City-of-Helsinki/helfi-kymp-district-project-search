@@ -17,12 +17,10 @@ type CardItemProps = {
   cardHelptextHtml?: boolean;
   cardMetas?: Array<MetadataType>;
   cardTags?: Array<TagType>;
-  cardAbout: string;
 };
 
 export const CardItem = (props: CardItemProps): JSX.Element => {
   const {
-    cardAbout,
     cardModifierClass,
     cardImage,
     cardTitle,
@@ -43,7 +41,7 @@ export const CardItem = (props: CardItemProps): JSX.Element => {
   const HeadingTag = cardTitleLevel ? `h${cardTitleLevel}` as keyof JSX.IntrinsicElements : 'h3';
 
   return (
-    <div about={cardAbout} className={cardClass}>
+    <div className={cardClass}>
       {cardImage &&
         <div className="card__image">
           { cardImage }
@@ -55,13 +53,17 @@ export const CardItem = (props: CardItemProps): JSX.Element => {
           <a href={cardUrl} className="card__link" {...cardUrlExternal && { 'data-is-external': 'true' }} rel="bookmark">
             <span>{ cardTitle }</span>
             {cardUrlExternal &&
-              <span className="link__type link__type--external" aria-label={`(${Drupal.t('Link leads to external service', {}, { context: 'Explanation for screen-reader software that the icon visible next to this link means that the link leads to an external service.' })})`}></span>
+              <span className="link__type link__type--external" aria-label={`(${Drupal.t(
+                'Link leads to external service',
+                {},
+                { context: 'Explanation for screen-reader software that the icon visible next to this link means that the link leads to an external service.' }
+              )})`}></span>
             }
           </a>
         </HeadingTag>
         {cardCategoryTag &&
           <div className="card__category">
-            <Tags tags={ [ cardCategoryTag ] } />
+            <Tags tags={[cardCategoryTag]} />
           </div>
         }
 
@@ -99,7 +101,7 @@ export const CardItem = (props: CardItemProps): JSX.Element => {
 
         {cardTags &&
           <div className="card__tags">
-            <Tags tags={ cardTags } />
+            <Tags tags={cardTags} />
           </div>
         }
 

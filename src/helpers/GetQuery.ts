@@ -60,10 +60,10 @@ const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
         const terms: object[] = [];
 
         state.value.forEach((value: any) => {
-          terms.push({ term: { [`${IndexFields.TITLE}.keyword`]: { value: value.value, boost: 50 }}});
+          terms.push({ term: { [`${IndexFields.TITLE}.keyword`]: { value: value.value.toLowerCase(), boost: 50 }}});
           // if project filter is also set, boost projects.
-          terms.push({ term: { [`${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}.keyword`]: { value: value.value, boost: isProjectFilterSet ? 3000 : 30 }}});
-          terms.push({ term: { [`${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE}.keyword`]: { value: value.value, boost: 50 }}});
+          terms.push({ term: { [`${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}.keyword`]: { value: value.value.toLowerCase(), boost: isProjectFilterSet ? 3000 : 30 }}});
+          terms.push({ term: { [`${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE}.keyword`]: { value: value.value.toLowerCase(), boost: 50 }}});
         });
 
         query.function_score.query.bool.should.push(...terms);

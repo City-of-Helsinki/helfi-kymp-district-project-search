@@ -1,5 +1,9 @@
+type SearchStateItemValue = {
+  value: string;
+}
+
 type SearchStateItem = {
-  value: string[];
+  value: SearchStateItemValue[];
 };
 
 type SearchState = {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { TextInput } from 'hds-react';
 
 import type OptionType from '../../types/OptionType';
+import type SearchState from '../../types/SearchState';
 
 type TextProps = {
   componentId: string;
@@ -10,7 +11,7 @@ type TextProps = {
   label: string;
   placeholder: string;
   setQuery: Function;
-  searchState: any;
+  searchState: SearchState;
 };
 
 export const Text = ({
@@ -47,7 +48,7 @@ export const Text = ({
     }
   }, [componentId, initialize, initialValue, loading, setQuery]);
 
-  const title: string = searchState[componentId]?.value?.[0]?.value || [];
+  const title: string = searchState[componentId]?.value?.[0]?.value;
 
   return (
     <TextInput

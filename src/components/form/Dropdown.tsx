@@ -36,7 +36,7 @@ const getDropdownValues = (searchStateValue: any, componentId: string, options: 
     return [];
   }
 
-  return options.filter(item => searchStateValue[componentId].value.find((val: any) => val.value === item.value));
+  return options.filter(item => searchStateValue[componentId].value.find((val: OptionType) => val.value === item.value));
 };
 
 export const Dropdown = ({
@@ -96,9 +96,9 @@ export const Dropdown = ({
         // @ts-ignore
         options={options}
         onChange={(values: OptionType[]) => {
-          let uniqueValues = values.map(({label, ...values}) => values).filter((val, index, array) => array.findIndex(t => t.value === val.value) === index);
+          let valuesWithoutLabel = values.map(({label, ...values}) => values);
           setQuery({
-            value: uniqueValues,
+            value: valuesWithoutLabel,
           });
         }}
         placeholder={placeholder}

@@ -15,6 +15,8 @@ type DropdownProps = Omit<
   componentId: string;
   indexKey: string;
   filterKey: string;
+  initialValue: string[];
+  initialize: Function;
   icon?: JSX.Element;
   label: string;
   placeholder: string;
@@ -34,13 +36,15 @@ const getDropdownValues = (searchStateValue: any, componentId: string, options: 
     return [];
   }
 
-  return options.filter(item => searchStateValue[componentId].value.includes(item.value));
+  return options.filter(item => searchStateValue[componentId].value.find((val: any) => val.value === item.value));
 };
 
 export const Dropdown = ({
   componentId,
   indexKey,
   filterKey,
+  initialValue,
+  initialize,
   icon,
   label,
   placeholder,
@@ -53,15 +57,31 @@ export const Dropdown = ({
   const aggregations: Aggregations = getAggregations(searchState, componentId)
   const options: OptionType[] = useAggregations(aggregations, indexKey, filterKey);
   const [value, setValue] = useState<OptionType[]>(() => getDropdownValues(searchState, componentId, options));
-  
-  useEffect(() => {
-    if (!value || !value.length) {
-      setQuery({ value: null });
-    } else {
-      setQuery({ value: value.map((option: OptionType) => option.value) });
-    }
-  }, [value]);
+  const [loading, setLoading] = useState<boolean>(true);
 
+  useEffect(() => {
+    if (loading && aggregations && options) {
+      if (!initialValue.length) {
+        initialize(componentId);
+        setLoading(false);
+        return;
+      }
+
+      const values: OptionType[] = [];
+
+      initialValue.forEach((value: string) => {
+        values.push({value: value});
+      });
+
+      setQuery({
+        value: values,
+      });
+
+      initialize(componentId);
+      setLoading(false);
+    }
+  }, [aggregations, componentId, initialize, initialValue, loading, options, setQuery]);
+  
   useEffect(() => {
     setValue(getDropdownValues(searchState, componentId, options))
   }, [searchState]);
@@ -70,19 +90,27 @@ export const Dropdown = ({
     <div className="district-project-search-form__filter">
       <Combobox
         clearButtonAriaLabel={clearButtonAriaLabel}
+        disabled={loading}
         label={label}
         icon={icon}
         // @ts-ignore
         options={options}
         onChange={(values: OptionType[]) => {
-         let uniqueValues = values.filter((val, index, array) => array.findIndex(t => t.value === val.value) === index);
-          setValue(uniqueValues);
+          let uniqueValues = values.map(({label, ...values}) => values).filter((val, index, array) => array.findIndex(t => t.value === val.value) === index);
+          setQuery({
+            value: uniqueValues,
+          });
         }}
         placeholder={placeholder}
         multiselect={true}
         selectedItemRemoveButtonAriaLabel={selectedItemRemoveButtonAriaLabel}
         toggleButtonAriaLabel={toggleButtonAriaLabel}
         value={value}
+        theme={{
+          '--focus-outline-color': 'var(--hdbt-color-black)',
+          '--multiselect-checkbox-background-selected': 'var(--hdbt-color-black)',
+          '--placeholder-color': 'var(--hdbt-color-black)',
+        }}
       />
     </div>
   );

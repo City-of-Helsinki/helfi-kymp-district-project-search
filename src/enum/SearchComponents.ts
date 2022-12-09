@@ -4,7 +4,7 @@ export const SearchComponents = {
   THEME: 'project_theme',
   PHASE: 'project_phase',
   TYPE: 'project_type',
-  RESULTS: 'results',
+  RESULTS: 'page',
   RESULT_STATS: 'result_stats',
   SUBMIT: 'submit',
   FILTER_BULLETS: 'filter_bullets',

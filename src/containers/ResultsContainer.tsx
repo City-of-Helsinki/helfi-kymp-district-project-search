@@ -1,18 +1,32 @@
 import { useRef, useState } from 'react';
 import { ReactiveList } from '@appbaseio/reactivesearch';
 
-import SearchComponents from '../enum/SearchComponents';
-import SortOptions from '../enum/SortOptions';
-import Result from '../types/Result';
 import Pagination from '../components/results/Pagination';
 import ResultCard from '../components/results/ResultCard';
 import ResultsHeading from '../components/results/ResultsHeading';
-import useResultListQuery from '../hooks/useResultListQuery';
-import useWindowDimensions from '../hooks/useWindowDimensions';
+
+import SearchComponents from '../enum/SearchComponents';
+import SortOptions from '../enum/SortOptions';
 import IndexFields from '../enum/IndexFields';
 
+import useResultListQuery from '../hooks/useResultListQuery';
+import useWindowDimensions from '../hooks/useWindowDimensions';
+import { setParams } from '../helpers/Params';
 
-const ResultsContainer = (): JSX.Element => {
+import type Result from '../types/Result';
+import type InitialState from '../types/InitialState';
+import type SearchState from '../types/SearchState';
+
+type ResultsContainerProps = {
+  initialParams: InitialState;
+  searchState: SearchState;
+};
+
+type ResultsData = {
+  data: Result[];
+};
+
+const ResultsContainer = ({ initialParams, searchState }: ResultsContainerProps): JSX.Element => {
   const resultListFilter = useResultListQuery();
   const dimensions = useWindowDimensions();
   const resultsWrapper = useRef<HTMLDivElement | null>(null);
@@ -32,29 +46,33 @@ const ResultsContainer = (): JSX.Element => {
     },
   };
   
-  const onPageChange = () => {
-    if (!resultsWrapper.current) {
-      return;
-    }
-
-    if (Math.abs(resultsWrapper.current.getBoundingClientRect().y) < window.pageYOffset) {
-      resultsWrapper.current.scrollIntoView({behavior: "smooth"});
-    }
-  };
-
   return (
     <div ref={resultsWrapper}>
       <ResultsHeading setSort={setSort} />
       <ReactiveList
         className="district-project-search__container"
         componentId={SearchComponents.RESULTS}
-        dataField={'id'}
-        onPageChange={onPageChange}
+        dataField={IndexFields.TITLE}
+        // Seems like a bug in ReactiveSearch.
+        // Setting defaultPage prop does nothing.
+        // currentPage props used in source but missing in props type declarations.
+        // @ts-ignore
+        currentPage={initialParams.page}
+        onPageChange={() => {
+          setParams(searchState);
+
+          if (!resultsWrapper.current) {
+            return;
+          }
+
+          if (Math.abs(resultsWrapper.current.getBoundingClientRect().y) < window.scrollY) {
+            resultsWrapper.current.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
         pages={pages}
         pagination={true}
         showResultStats={false}
         size={10}
-        URLParams={true}
         defaultQuery={() => ({
           query: {
             ...resultListFilter,
@@ -64,9 +82,9 @@ const ResultsContainer = (): JSX.Element => {
           ]
         })}
         react={{
-          and: [SearchComponents.FILTER_BULLETS, SearchComponents.SUBMIT]
+          and: [SearchComponents.SUBMIT]
         }}
-        render={({ data }: any) => {
+        render={({ data }: ResultsData) => {
           return (
             <ul className="district-project-search__listing">
               {data.map((item: Result) => (

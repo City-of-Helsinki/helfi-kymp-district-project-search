@@ -27,7 +27,7 @@ function ResultsHeading({ setSort }: ResultsHeadingProps): JSX.Element {
                 render={({ searchState }) => {
                   return (
                     <span className="district-project-search__count">
-                      <span className="district-project-search__count-total">{searchState?.results?.hits?.total} </span>
+                      <span className="district-project-search__count-total">{searchState?.page?.hits?.total} </span>
                       <span className="district-project-search__count-label">{Drupal.t('search results', {}, { context: 'District and project search' })} </span>
                     </span>
                   );

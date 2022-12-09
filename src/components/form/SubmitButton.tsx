@@ -2,34 +2,35 @@ import { Button } from 'hds-react';
 import { useEffect, useState } from 'react';
 
 import { useLanguageQuery } from '../../hooks/useLanguageQuery';
-import { getQuery } from '../../helpers/helpers';
+import getQuery from '../../helpers/GetQuery';
 import type SearchState from '../../types/SearchState';
+import { setParams } from '../../helpers/Params';
 
-
-type Props = {
+type SubmitButtonProps = {
+  initialized: boolean;
   searchState: SearchState;
   setQuery: Function;
 };
 
-export const SubmitButton = ({ searchState, setQuery }: Props) => {
+export const SubmitButton = ({ initialized, searchState, setQuery }: SubmitButtonProps) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const languageFilter = useLanguageQuery();
 
   useEffect(() => {
-    if (mounted) {
-      return;
+    if (initialized && !mounted) {
+      setQuery(getQuery({searchState, languageFilter}));
+      setMounted(true);
     }
-
-    setQuery(getQuery({searchState, languageFilter}));
-    setMounted(true);
-  }, [getQuery, setQuery, mounted, setMounted, languageFilter]);
+  }, [getQuery, initialized, mounted, setMounted, setQuery]);
 
   return (
     <Button
       className='district-project-search-form__submit-button'
       type='submit'
+      disabled={!initialized}
       onClick={() => {
         setQuery(getQuery({searchState, languageFilter}));
+        setParams(searchState);
       }}
       variant='primary'
       theme='black'

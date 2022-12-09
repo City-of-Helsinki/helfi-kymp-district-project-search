@@ -1,38 +1,54 @@
 import { useRef, useState } from 'react';
 import { ReactiveComponent } from '@appbaseio/reactivesearch';
-import { TextInput, Accordion, IconLocation } from 'hds-react';
+import { Accordion, IconLocation } from 'hds-react';
 
 import Dropdown from '../components/form/Dropdown';
+import Text from '../components/form/Text';
 import SelectionsContainer from './SelectionsContainer';
 import SearchComponents from '../enum/SearchComponents';
 import SubmitButton from '../components/form/SubmitButton';
 import IndexFields from '../enum/IndexFields';
 import useLanguageQuery from '../hooks/useLanguageQuery';
+import getQuery from '../helpers/GetQuery';
+import InitialState from '../types/InitialState';
 import type OptionType from '../types/OptionType';
-import { getQuery } from '../helpers/helpers';
+import type SearchState from '../types/SearchState';
 
-
-type FormContainerProps = {
-  initialState: {
-    isParamsSet: boolean;
-    title: string;
-    districts: OptionType[];
-    themes: OptionType[];
-    phases: OptionType[];
-    types: OptionType[];
-  };
-  searchState: any;
+type InitializationMap = {
+  districts: boolean;
+  project_theme: boolean;
+  project_phase: boolean;
+  project_type: boolean;
 };
 
-const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
-  const [title, setTitle] = useState<string>();
-  const [isAccordionInitiallyOpen] = useState(initialState.isParamsSet);
+type InitialParam = Omit<InitialState, 'page'>;
+
+type FormContainerProps = {
+  initialParams: Omit<InitialState, 'page'>;
+  searchState: SearchState;
+  setSearchState: Function;
+};
+
+const FormContainer = ({ initialParams, searchState, setSearchState }: FormContainerProps) => {
+  const [initialized, setInitialized] = useState<InitializationMap>({
+    districts: false,
+    project_theme: false,
+    project_phase: false,
+    project_type: false
+  });
+
   const languageFilter = useLanguageQuery();
   const submitButton = useRef<any>(null);
   const districtRef = useRef<any>(null);
   const themeRef = useRef<any>(null);
   const phaseRef = useRef<any>(null);
   const typeRef = useRef<any>(null);
+
+  const initialize = (key: string) => {
+    setInitialized((prev: InitializationMap) => ({ ...prev, [key]: true }));
+  };
+
+  const { districts, project_theme, project_phase, project_type } = initialized;
 
   const clearSelection = (selection: OptionType, selectionType: string) => {
     const newValue = {...searchState}
@@ -55,8 +71,8 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
         break;
     }
 
-    const index = newValue[selectionType].value?.findIndex((option: string) => {
-      return option === selection.value;
+    const index = newValue[selectionType].value.findIndex((option: any) => {
+      return option.value === selection.value;
     });
 
     if (index !== undefined) {
@@ -65,17 +81,6 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
 
     ref?.current.setQuery({ value: newValue[selectionType].value });
     submitButton.current.setQuery(getQuery({searchState: newValue, languageFilter}));
-
-  };
-
-  const clearSelections = () => {
-    if (submitButton && submitButton.current) {
-      districtRef.current.setQuery({ query: null });
-      themeRef.current.setQuery({ query: null });
-      phaseRef.current.setQuery({ query: null });
-      typeRef.current.setQuery({ query: null });
-      submitButton.current.setQuery({ query: null, value: Number(searchState?.submit?.value) + 1 || 0 });
-    }
   };
 
   return (
@@ -89,15 +94,14 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
             })}
             render={({ setQuery }) => {
               return (
-                <TextInput
-                  id="district-or-project-name"
+                <Text 
+                  componentId={SearchComponents.TITLE}
+                  initialValue={initialParams[SearchComponents.TITLE as keyof InitialParam] ?? []}
+                  initialize={initialize}
                   label={Drupal.t('Name of residential area or project', {}, { context: 'District and project search form label' })}
                   placeholder={Drupal.t('Use a search word such as "Pasila"', {}, { context: 'District and project search form label' })}
-                  defaultValue={title}
-                  onChange={({ target: { value } }) => {
-                    setTitle(value);
-                    setQuery({value});
-                  }}
+                  setQuery={setQuery}
+                  searchState={searchState}
                 />
               )}}
             URLParams={false}
@@ -144,6 +148,8 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
                   componentId={SearchComponents.DISTRICTS}
                   indexKey={IndexFields.FIELD_PROJECT_DISTRICT_TITLE}
                   filterKey="districts_for_filters"
+                  initialValue={initialParams[SearchComponents.DISTRICTS as keyof InitialParam] ?? []}
+                  initialize={initialize}
                   icon={<IconLocation />}
                   label={Drupal.t('Select the residential area from the list', {}, { context: 'District and project search form label' })}
                   placeholder={Drupal.t('Select area', {}, { context: 'District and project search form label' })}
@@ -157,7 +163,7 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
         <Accordion
           className='district-project-search-form__additional-filters'
           size='s'
-          initiallyOpen={isAccordionInitiallyOpen}
+          initiallyOpen={new URLSearchParams(window.location.search).toString() ? true : false}
           headingLevel={4}
           heading={Drupal.t('Refine the project search', {}, { context: 'District and project search' })}
           language={window.drupalSettings.path.currentLanguage || 'fi'}
@@ -195,6 +201,8 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
                     componentId={SearchComponents.THEME}
                     indexKey={IndexFields.FIELD_PROJECT_THEME_NAME}
                     filterKey="project_theme_taxonomy_terms"
+                    initialValue={initialParams[SearchComponents.THEME as keyof InitialParam] ?? []}
+                    initialize={initialize}
                     label={Drupal.t('Project theme', {}, { context: 'District and project search form label' })}
                     placeholder={Drupal.t('All themes', {}, { context: 'District and project search form label' })}
                     setQuery={setQuery}
@@ -231,6 +239,8 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
                     componentId={SearchComponents.PHASE}
                     indexKey={IndexFields.FIELD_PROJECT_PHASE_NAME}
                     filterKey="project_phase_taxonomy_terms"
+                    initialValue={initialParams[SearchComponents.PHASE as keyof InitialParam] ?? []}
+                    initialize={initialize}
                     label={Drupal.t('Project stage', {}, { context: 'District and project search form label' })}
                     placeholder={Drupal.t('All stages', {}, { context: 'District and project search form label' })}
                     setQuery={setQuery}
@@ -267,6 +277,8 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
                     componentId={SearchComponents.TYPE}
                     indexKey={IndexFields.FIELD_PROJECT_TYPE_NAME}
                     filterKey="project_type_taxonomy_terms"
+                    initialValue={initialParams[SearchComponents.TYPE as keyof InitialParam] ?? []}
+                    initialize={initialize}
                     label={Drupal.t('Project type', {}, { context: 'District and project search form label' })}
                     placeholder={Drupal.t('All types', {}, { context: 'District and project search form label' })}
                     setQuery={setQuery}
@@ -284,6 +296,7 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
             return (
               <div className='district-project-search-form__submit'>
                 <SubmitButton
+                  initialized={districts && project_theme && project_phase && project_type}
                   searchState={searchState}
                   setQuery={setQuery}
                 />
@@ -294,13 +307,12 @@ const FormContainer = ({ initialState, searchState }: FormContainerProps) => {
         />
         <ReactiveComponent
           componentId={SearchComponents.FILTER_BULLETS}
-          render={({ setQuery }) => {
+          render={() => {
             return (
               <SelectionsContainer
                 searchState={searchState}
-                setQuery={setQuery}
+                setSearchState={setSearchState}
                 clearSelection={clearSelection}
-                clearSelections={clearSelections}
               />
             );
           }}

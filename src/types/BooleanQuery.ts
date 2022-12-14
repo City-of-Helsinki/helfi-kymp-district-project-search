@@ -13,11 +13,24 @@ type TermQuery = {
   };
 };
 
+type contentTypeQuery = {
+  bool: {
+    _name: string;
+    should: TermQuery[];
+    must?: TermQuery[];
+    filter: {
+      term: {
+        _index: string;
+      }
+    }
+  }
+}
+
 type BooleanQuery = {
   function_score: {
     query: {
       bool: {
-        should: TermQuery[];
+        should: contentTypeQuery[];
         filter?: TermQuery[];
       };
     };

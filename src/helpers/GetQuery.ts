@@ -16,7 +16,31 @@ const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
     function_score: {
       query: {
         bool: {
-          should: [],
+          should: [
+            {
+              bool: {
+                _name: "Match district",
+                should: [],
+                filter: {
+                  term: {
+                    _index: "districts"
+                  }
+                }
+              }
+            },
+            {
+              bool: {
+                _name: "Match Project",
+                should: [],
+                must: [],
+                filter: {
+                  term: {
+                    _index: "projects"
+                  }
+                }
+              }
+            }
+          ],
           filter: languageFilter.bool.filter,
         },
       },
@@ -41,36 +65,45 @@ const getQuery = ({ searchState, languageFilter }: GetQueryProps) => {
     const state = searchState?.[key] || null;
 
     if (state && state.value && state.value.length) {
-      query.function_score.min_score = (isProjectFilterSet && isDistrictFilterSet) || (isProjectFilterSet && isTitleFilterSet) ?  Number(50) : Number(weight + 1);
+      query.function_score.min_score = (isProjectFilterSet && isDistrictFilterSet) || (isProjectFilterSet && isTitleFilterSet) ?  Number(210) : Number(weight + 1);
 
       if (key === SearchComponents.TITLE) {
-        const wildcards: object[] = [];
+        const districtWildcards: object[] = [];
+        const projectWildcards: object[] = [];
+
         state.value.forEach((value: any) => {
-          wildcards.push({ wildcard: { [`${IndexFields.TITLE}.keyword`]: { value: `*${value.value.toLowerCase()}*`, boost: 50 }}});
-          wildcards.push({ wildcard: { [`${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE}.keyword`]: { value: `*${value.value.toLowerCase()}*`, boost: isProjectFilterSet ? 45 : 22 }}});
+          districtWildcards.push({ wildcard: { [`${IndexFields.TITLE}.keyword`]: { value: `*${value.value.toLowerCase()}*`, boost: 50 }}});
+          districtWildcards.push({ wildcard: { [`${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE}.keyword`]: { value: `*${value.value.toLowerCase()}*`, boost: isProjectFilterSet ? 45 : 22 }}});
+          districtWildcards.push({ wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${value.value.toLowerCase()}*`, boost: 22 }}});
+          
+          projectWildcards.push({ wildcard: { [`${IndexFields.TITLE}.keyword`]: { value: `*${value.value.toLowerCase()}*`, boost: 50 }}});
           // if project filter is also set, boost projects.
-          wildcards.push({ wildcard: { [`${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}.keyword`]: { value: `*${value.value.toLowerCase()}*`, boost: isProjectFilterSet ? 1000 : 22 }}});
-          wildcards.push({ wildcard: { [IndexFields.FIELD_DISTRICT_SEARCH_METATAGS]: { value: `*${value.value.toLowerCase()}*`, boost: 22 }}});
-          wildcards.push({ wildcard: { [IndexFields.FIELD_PROJECT_SEARCH_METATAGS]: { value: `*${value.value.toLowerCase()}*`, boost: 22 }}});
+          projectWildcards.push({ wildcard: { [`${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}.keyword`]: { value: `*${value.value.toLowerCase()}*`, boost: isProjectFilterSet ? 1000 : 22 }}});
+          projectWildcards.push({ wildcard: { [IndexFields.FIELD_PROJECT_SEARCH_METATAGS]: { value: `*${value.value.toLowerCase()}*`, boost: 22 }}});
         });
 
-        query.function_score.query.bool.should.push(...wildcards);
+        query.function_score.query.bool.should[0].bool.should.push(...districtWildcards);
+        query.function_score.query.bool.should[1].bool.should.push(...projectWildcards);
       }
       else if (key === SearchComponents.DISTRICTS) {
-        const terms: object[] = [];
+        const districtTerms: object[] = [];
+        const projectTerms: object[] = [];
 
         state.value.forEach((value: any) => {
-          terms.push({ term: { [`${IndexFields.TITLE}.keyword`]: { value: value.value, boost: 50 }}});
+          districtTerms.push({ term: { [`${IndexFields.TITLE}.keyword`]: { value: value.value.toLowerCase(), boost: 50 }}});
+          districtTerms.push({ term: { [`${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE}.keyword`]: { value: value.value.toLowerCase(), boost: 50 }}});
+          
+          projectTerms.push({ term: { [`${IndexFields.TITLE}.keyword`]: { value: value.value.toLowerCase(), boost: 50 }}});
           // if project filter is also set, boost projects.
-          terms.push({ term: { [`${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}.keyword`]: { value: value.value, boost: isProjectFilterSet ? 3000 : 30 }}});
-          terms.push({ term: { [`${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE}.keyword`]: { value: value.value, boost: 50 }}});
+          projectTerms.push({ term: { [`${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}.keyword`]: { value: value.value.toLowerCase(), boost: isProjectFilterSet ? 3000 : 30 }}});
         });
 
-        query.function_score.query.bool.should.push(...terms);
+        query.function_score.query.bool.should[0].bool.should.push(...districtTerms);
+        query.function_score.query.bool.should[1].bool.should.push(...projectTerms);
       }
       else {
-        state.value.forEach((value: any) => {          
-          query.function_score.query.bool.should.push({
+        state.value.forEach((value: any) => {
+          query.function_score.query.bool.should[1].bool.must?.push({
             term: {
               [ComponentMap[key]]: { value: value.value, boost: isProjectFilterSet ? 120 : 70 }
             }

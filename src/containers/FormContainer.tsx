@@ -113,21 +113,21 @@ const FormContainer = ({ initialParams, searchState, setSearchState }: FormConta
               aggs: {
                 [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: {
                   terms: {
-                    field: `${IndexFields.FIELD_PROJECT_DISTRICT_TITLE}.keyword`,
+                    field: `${IndexFields.FIELD_PROJECT_DISTRICT_TITLE_FOR_UI}.keyword`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
                 [IndexFields.TITLE]: {
                   terms: {
-                    field: `${IndexFields.TITLE}.keyword`,
+                    field: `${IndexFields.TITLE_FOR_UI}.keyword`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
                 [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: {
                   terms: {
-                    field: `${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE}.keyword`,
+                    field: `${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE_FOR_UI}.keyword`,
                     size: 500,
                     order: { _key: 'asc' }
                   }

@@ -6,7 +6,7 @@ export const useResultListQuery = () => {
     bool: {
       filter: [
         { term: { _language: window.drupalSettings.path.currentLanguage || 'fi' } },
-        { terms: { [`${IndexFields.CONTENT_TYPE}.keyword`]: ["project", "district"] } },
+        { terms: { [`${IndexFields.CONTENT_TYPE}`]: ["project", "district"] } },
       ],
     }
   };

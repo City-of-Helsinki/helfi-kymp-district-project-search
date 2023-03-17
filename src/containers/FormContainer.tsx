@@ -113,28 +113,28 @@ const FormContainer = ({ initialParams, searchState, setSearchState }: FormConta
               aggs: {
                 [IndexFields.FIELD_PROJECT_DISTRICT_TITLE]: {
                   terms: {
-                    field: `${IndexFields.FIELD_PROJECT_DISTRICT_TITLE_FOR_UI}.keyword`,
+                    field: `${IndexFields.FIELD_PROJECT_DISTRICT_TITLE_FOR_UI}`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
                 [IndexFields.TITLE]: {
                   terms: {
-                    field: `${IndexFields.TITLE_FOR_UI}.keyword`,
+                    field: `${IndexFields.TITLE_FOR_UI}`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
                 [IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE]: {
                   terms: {
-                    field: `${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE_FOR_UI}.keyword`,
+                    field: `${IndexFields.FIELD_DISTRICT_SUBDISTRICTS_TITLE_FOR_UI}`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
                 },
                 districts_for_filters: {
                   terms: {
-                    field: `${IndexFields.DISTRICTS_FOR_FILTERS_DISTRICT_TITLE}.keyword`,
+                    field: `${IndexFields.DISTRICTS_FOR_FILTERS_DISTRICT_TITLE}`,
                     size: 500,
                     order: { _key: 'asc' }
                   }
@@ -180,14 +180,14 @@ const FormContainer = ({ initialParams, searchState, setSearchState }: FormConta
                 aggs: {
                   [IndexFields.FIELD_PROJECT_THEME_NAME]: {
                     terms: {
-                      field: `${IndexFields.FIELD_PROJECT_THEME_NAME}.keyword`,
+                      field: `${IndexFields.FIELD_PROJECT_THEME_NAME}`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
                   },
                   project_theme_taxonomy_terms: {
                     terms: {
-                      field: `${IndexFields.PROJECT_THEME_NAME}.keyword`,
+                      field: `${IndexFields.PROJECT_THEME_NAME}`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
@@ -218,14 +218,14 @@ const FormContainer = ({ initialParams, searchState, setSearchState }: FormConta
                 aggs: {
                   [IndexFields.FIELD_PROJECT_PHASE_NAME]: {
                     terms: {
-                      field: `${IndexFields.FIELD_PROJECT_PHASE_NAME}.keyword`,
+                      field: `${IndexFields.FIELD_PROJECT_PHASE_NAME}`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
                   },
                   project_phase_taxonomy_terms: {
                     terms: {
-                      field: `${IndexFields.PROJECT_PHASE_NAME}.keyword`,
+                      field: `${IndexFields.PROJECT_PHASE_NAME}`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
@@ -256,14 +256,14 @@ const FormContainer = ({ initialParams, searchState, setSearchState }: FormConta
                 aggs: {
                   [IndexFields.FIELD_PROJECT_TYPE_NAME]: {
                     terms: {
-                      field: `${IndexFields.FIELD_PROJECT_TYPE_NAME}.keyword`,
+                      field: `${IndexFields.FIELD_PROJECT_TYPE_NAME}`,
                       size: 500,
                       order: { _key: 'asc' }
                     }
                   },
                   project_type_taxonomy_terms: {
                     terms: {
-                      field: `${IndexFields.PROJECT_TYPE_NAME}.keyword`,
+                      field: `${IndexFields.PROJECT_TYPE_NAME}`,
                       size: 500,
                       order: { _key: 'asc' }
                     }

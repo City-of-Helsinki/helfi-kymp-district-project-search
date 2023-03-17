@@ -36,13 +36,13 @@ const ResultsContainer = ({ initialParams, searchState }: ResultsContainerProps)
   const sorting: any = {
     'most_relevant': {
       _score: { order: "desc" },
-      [`${IndexFields.TITLE}.keyword`]: { order: "asc" }
+      [`${IndexFields.TITLE}`]: { order: "asc" }
     },
     'a_o': {
-      [`${IndexFields.TITLE}.keyword`]: { order: "asc" },
+      [`${IndexFields.TITLE}`]: { order: "asc" },
     },
     'o_a': {
-      [`${IndexFields.TITLE}.keyword`]: { order: "desc" },
+      [`${IndexFields.TITLE}`]: { order: "desc" },
     },
   };
   
